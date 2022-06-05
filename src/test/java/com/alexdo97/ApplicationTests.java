@@ -1,10 +1,10 @@
-package com.alexdo97.shoppingapprest;
+package com.alexdo97;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ShoppingAppRestApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {
