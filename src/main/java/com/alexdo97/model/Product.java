@@ -1,7 +1,7 @@
 package com.alexdo97.model;
 
 import javax.persistence.Id;
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,21 +17,31 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "category", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Category category;
 
-	@Column(name = "price", nullable = false)
 	private double price;
 
 	public Product() {
 
+	}
+
+	public Product(String name, Category category, double price) {
+		this.name = name;
+		this.category = category;
+		this.price = price;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public Long getId() {

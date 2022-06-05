@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -31,8 +32,12 @@ public class Customer {
 	@JoinColumn(name = "identity_id")
 	private Identity identity;
 
+	@OneToOne(mappedBy = "customer")
+	@JoinColumn(name = "cart_id")
+	private Cart cart;
+
 	public Customer() {
-		
+
 	}
 
 	public Customer(String firstName, String lastName, String email, Identity identity) {
@@ -82,5 +87,5 @@ public class Customer {
 	public void setIdentity(Identity identity) {
 		this.identity = identity;
 	}
-	
+
 }
