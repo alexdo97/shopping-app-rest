@@ -62,7 +62,7 @@ public class ProductController {
 		productRepository.deleteById(id);
 	}
 
-	@PatchMapping("/{id}/{newName}")
+	@PatchMapping("/{id}/name/{newName}")
 	public ResponseEntity<Product> updateProductName(@PathVariable Long id, @PathVariable String newName) {
 		Product updatedProduct = productRepository.findById(id).get();
 		updatedProduct.setName(newName);
@@ -70,7 +70,7 @@ public class ProductController {
 		return ResponseEntity.ok(updatedProduct);
 	}
 
-	@PatchMapping("/{id}/{newCategory}")
+	@PatchMapping("/{id}/category/{newCategory}")
 	public ResponseEntity<Product> updateProductCategory(@PathVariable Long id, @PathVariable Category newCategory) {
 		Product updatedProduct = productRepository.findById(id).get();
 		updatedProduct.setCategory(newCategory);
@@ -78,7 +78,7 @@ public class ProductController {
 		return ResponseEntity.ok(updatedProduct);
 	}
 
-	@PatchMapping("/{id}/{newPrice}")
+	@PatchMapping("/{id}/price/{newPrice}")
 	public ResponseEntity<Product> updateProductPrice(@PathVariable Long id, @PathVariable double newPrice) {
 		Product updatedProduct = productRepository.findById(id).get();
 		updatedProduct.setPrice(newPrice);

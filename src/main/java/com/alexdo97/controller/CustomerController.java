@@ -62,7 +62,7 @@ public class CustomerController {
 		customerRepository.deleteById(id);
 	}
 
-	@PatchMapping("/{id}/{firstName}")
+	@PatchMapping("/{id}/firstName/{firstName}")
 	public ResponseEntity<Customer> updateCustomerFirstName(@PathVariable Long id, @PathVariable String firstName) {
 		Customer updatedCustomer = customerRepository.findById(id).get();
 		updatedCustomer.setFirstName(firstName);
@@ -70,15 +70,15 @@ public class CustomerController {
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	@PatchMapping("/{id}/{lastName}")
+	@PatchMapping("/{id}/lastName/{lastName}")
 	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable Long id, @PathVariable String lastName) {
 		Customer updatedCustomer = customerRepository.findById(id).get();
-		updatedCustomer.setFirstName(lastName);
+		updatedCustomer.setLastName(lastName);
 		customerRepository.save(updatedCustomer);
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	@PatchMapping("/{id}/{newEmail}")
+	@PatchMapping("/{id}/email/{newEmail}")
 	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable Long id, @PathVariable String newEmail) {
 		Customer updatedCustomer = customerRepository.findById(id).get();
 		updatedCustomer.setEmail(newEmail);
@@ -86,7 +86,7 @@ public class CustomerController {
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	@PatchMapping("/{id}/{phoneNumber}")
+	@PatchMapping("/{id}/phoneNumber/{newPhoneNumber}")
 	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable Long id,
 			@PathVariable String newPhoneNumber) {
 		Customer updatedCustomer = customerRepository.findById(id).get();
