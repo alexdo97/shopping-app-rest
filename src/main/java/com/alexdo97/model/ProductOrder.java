@@ -12,37 +12,31 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "order")
-public class Order {
+@Table(name = "product_order")
+public class ProductOrder {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+	@JoinColumn(name = "cart_id", nullable = false)
+	private Cart cart;
 
 	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
+	@JoinColumn(name = "product_id", nullable = false)
+	private Product product;
 
-	private int quantity;
+	private int quantity = 1;
 
 	@Column(name = "registered_at")
 	private LocalDateTime registeredAt;
 
-	@ManyToOne
-	@JoinColumn(name = "cart_id", nullable = false)
-	private Cart cart;
-
-	public Order() {
-
+	public ProductOrder() {
 	}
 
-	public Order(Product product, Customer customer, int quantity) {
+	public ProductOrder(Product product, int quantity) {
 		this.product = product;
-		this.customer = customer;
 		this.quantity = quantity;
 		this.registeredAt = LocalDateTime.now();
 	}
@@ -55,20 +49,12 @@ public class Order {
 		this.id = id;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Cart getCart() {
+		return cart;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 
 	public int getQuantity() {
@@ -87,12 +73,12 @@ public class Order {
 		this.registeredAt = registeredAt;
 	}
 
-	public Cart getCart() {
-		return cart;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setCart(Cart cart) {
-		this.cart = cart;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 }

@@ -15,36 +15,39 @@ import javax.persistence.Table;
 public class Customer {
 
 	@Id
-	@Column(name = "identity_id")
+	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "last_name")
+	@Column(name = "last_name", nullable = false)
 	private String firstName;
 
-	@Column(name = "first_name")
+	@Column(name = "first_name", nullable = false)
 	private String lastName;
 
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String email;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@Column(unique = true, nullable = false)
+	private String phoneNumber;
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@MapsId
-	@JoinColumn(name = "identity_id")
+	@JoinColumn(name = "id", nullable = false)
 	private Identity identity;
 
-	@OneToOne(mappedBy = "customer")
-	@JoinColumn(name = "cart_id")
+	@OneToOne
+	@JoinColumn(name = "cart_id", referencedColumnName = "id")
 	private Cart cart;
 
 	public Customer() {
 
 	}
 
-	public Customer(String firstName, String lastName, String email, Identity identity) {
-		super();
+	public Customer(String firstName, String lastName, String email, String phoneNumber, Identity identity) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.phoneNumber = phoneNumber;
 		this.identity = identity;
 	}
 
@@ -86,6 +89,22 @@ public class Customer {
 
 	public void setIdentity(Identity identity) {
 		this.identity = identity;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 
 }

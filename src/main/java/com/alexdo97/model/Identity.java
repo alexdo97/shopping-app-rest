@@ -18,15 +18,17 @@ public class Identity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false)
 	private Long id;
 
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String username;
 
 	@JsonIgnore
+	@Column(nullable = false)
 	private String password;
 
-	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@PrimaryKeyJoinColumn
 	private Customer customer;
 
@@ -34,10 +36,9 @@ public class Identity {
 
 	}
 
-	public Identity(String username, String password, Customer customer) {
+	public Identity(String username, String password) {
 		this.username = username;
 		this.password = password;
-		this.customer = customer;
 	}
 
 	public Long getId() {

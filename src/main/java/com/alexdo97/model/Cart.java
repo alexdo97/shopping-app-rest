@@ -2,12 +2,10 @@ package com.alexdo97.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -20,20 +18,22 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Order> items;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "customer_id", referencedColumnName = "id")
+	@OneToOne(mappedBy = "cart")
 	private Customer customer;
+
+	@OneToMany(mappedBy = "cart")
+	private List<ProductOrder> productOrders;
+
+	private double total;
 
 	public Cart() {
 
 	}
 
-	public Cart(List<Order> items, Customer customer) {
-		this.items = items;
+	public Cart(Customer customer, List<ProductOrder> productOrders) {
 		this.customer = customer;
+		this.productOrders = productOrders;
+		this.total = productOrders.stream().mapToDouble(p -> p.getProduct().getPrice() * p.getQuantity()).sum();
 	}
 
 	public Long getId() {
@@ -44,20 +44,28 @@ public class Cart {
 		this.id = id;
 	}
 
-	public List<Order> getItems() {
-		return items;
-	}
-
-	public void setItems(List<Order> items) {
-		this.items = items;
-	}
-
 	public Customer getCustomer() {
 		return customer;
 	}
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public List<ProductOrder> getProductOrders() {
+		return productOrders;
+	}
+
+	public void setProductOrders(List<ProductOrder> productOrders) {
+		this.productOrders = productOrders;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
 	}
 
 }
