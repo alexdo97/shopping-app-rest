@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexdo97.model.Customer;
-import com.alexdo97.model.Product;
 import com.alexdo97.repository.CustomerRepository;
 
 @RestController
@@ -43,7 +42,7 @@ public class CustomerController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Customer> updateProduct(@Valid @RequestBody Customer newCustomer, @PathVariable Long id) {
+	public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer newCustomer, @PathVariable Long id) {
 		Customer updatedCustomer = customerRepository.findById(id).map(customer -> {
 			customer.setFirstName(newCustomer.getFirstName());
 			customer.setLastName(newCustomer.getLastName());
