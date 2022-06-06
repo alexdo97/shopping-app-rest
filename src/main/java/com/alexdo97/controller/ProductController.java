@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alexdo97.enums.Category;
 import com.alexdo97.model.Product;
 import com.alexdo97.repository.ProductRepository;
 
@@ -59,6 +60,22 @@ public class ProductController {
 	@DeleteMapping("/{id}")
 	public void deleteProduct(@PathVariable Long id) {
 		productRepository.deleteById(id);
+	}
+
+	@PatchMapping("/{id}/{newName}")
+	public ResponseEntity<Product> updateProductName(@PathVariable Long id, @PathVariable String newName) {
+		Product updatedProduct = productRepository.findById(id).get();
+		updatedProduct.setName(newName);
+		productRepository.save(updatedProduct);
+		return ResponseEntity.ok(updatedProduct);
+	}
+
+	@PatchMapping("/{id}/{newCategory}")
+	public ResponseEntity<Product> updateProductCategory(@PathVariable Long id, @PathVariable Category newCategory) {
+		Product updatedProduct = productRepository.findById(id).get();
+		updatedProduct.setCategory(newCategory);
+		productRepository.save(updatedProduct);
+		return ResponseEntity.ok(updatedProduct);
 	}
 
 	@PatchMapping("/{id}/{newPrice}")
