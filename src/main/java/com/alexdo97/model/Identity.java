@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "identity")
@@ -24,12 +24,12 @@ public class Identity {
 	@Column(unique = true, nullable = false)
 	private String username;
 
-	@JsonIgnore
 	@Column(nullable = false)
 	private String password;
 
 	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@PrimaryKeyJoinColumn
+	@JsonManagedReference
 	private Customer customer;
 
 	public Identity() {

@@ -10,6 +10,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -33,6 +35,7 @@ public class Customer {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@MapsId
 	@JoinColumn(name = "id", nullable = false)
+	@JsonBackReference
 	private Identity identity;
 
 	@OneToOne
