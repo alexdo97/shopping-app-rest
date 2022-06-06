@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
-import com.alexdo97.Category;
+import com.alexdo97.enums.Category;
 
 @Entity
 @Table(name = "product")

@@ -5,7 +5,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import com.alexdo97.Category;
+import com.alexdo97.enums.Category;
 import com.alexdo97.model.Customer;
 import com.alexdo97.model.Identity;
 import com.alexdo97.model.Product;
