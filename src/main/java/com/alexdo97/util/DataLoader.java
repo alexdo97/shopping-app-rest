@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import com.alexdo97.enums.Category;
+import com.alexdo97.model.Cart;
 import com.alexdo97.model.Customer;
 import com.alexdo97.model.Identity;
 import com.alexdo97.model.Product;
@@ -29,13 +30,13 @@ public class DataLoader implements ApplicationRunner {
 
 		// Add customers
 		customerRepository.save(new Customer("Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152",
-				new Identity("alexdo97", "admin")));
-		customerRepository.save(
-				new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322", new Identity("david123", "test")));
+				new Identity("alexdo97", "admin"), new Cart()));
+		customerRepository.save(new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322",
+				new Identity("david123", "test"), new Cart()));
 		customerRepository.save(new Customer("Alin", "Badulea", "badulea66@yahoo.com", "0754652159",
-				new Identity("alinut", "alinnn123")));
+				new Identity("alinut", "alinnn123"), new Cart()));
 		customerRepository.save(new Customer("Mattia", "Baiguini", "mattia.baiguinii@gmail.com", "0756772122",
-				new Identity("mattia", "mattia07")));
+				new Identity("mattia", "mattia07"), new Cart()));
 
 		// Add products
 		productRepository.save(new Product("T-shirt", Category.Fashion, 60));
