@@ -114,6 +114,15 @@ public class ProductController {
 		cart = cartRepository.save(cart);
 		return sb.toString();
 	}
+
+	@DeleteMapping("/{productOrderId}/deleteProductOrder")
+	public void deleteProductOrder(@PathVariable Long productOrderId) {
+		cart = getCurrentCart();
+		cart.getProductOrders().removeIf(po -> po.getId().equals(productOrderId));
+		cart.calculateTotal();
+		cart = cartRepository.save(cart);
+	}
+
 	@PutMapping("/{id}")
 	public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product newProduct, @PathVariable Long id) {
 		Product updatedProduct = productRepository.findById(id).map(product -> {
