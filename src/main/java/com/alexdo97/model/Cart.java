@@ -31,7 +31,6 @@ public class Cart {
 	private double total;
 
 	public Cart() {
-		this.total = productOrders.stream().mapToDouble(p -> p.getProduct().getPrice() * p.getQuantity()).sum();
 	}
 
 	public Cart(Customer customer, List<ProductOrder> productOrders) {

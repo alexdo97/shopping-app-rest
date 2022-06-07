@@ -79,9 +79,10 @@ public class ProductController {
 			existingProductOrder.setRegisteredAt(LocalDateTime.now());
 			productOrderRepository.save(existingProductOrder);
 			cart = getCurrentCart();
+			cart.calculateTotal();
+			cart = cartRepository.save(cart);
 			System.out.println(cart.getProductOrders().toString());
 			System.out.println(cart.getTotal());
-			cart = cartRepository.save(cart);
 			return;
 		}
 
