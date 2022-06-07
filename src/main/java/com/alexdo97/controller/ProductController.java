@@ -46,9 +46,6 @@ public class ProductController {
 	@Autowired
 	CartRepository cartRepository;
 
-	Customer customer;
-	Cart cart;
-
 	@GetMapping("")
 	public List<Product> getProducts() {
 		return productRepository.findAll();
@@ -62,65 +59,6 @@ public class ProductController {
 	@PostMapping("")
 	public Product createProduct(@Valid @RequestBody Product newProduct) {
 		return productRepository.save(newProduct);
-	}
-
-	@PostMapping("/{id}/add")
-	public void addProductToCart(@PathVariable Long id, @RequestParam int quantity) {
-		if (customer == null) {
-			initCustomerAndCart();
-		}
-
-		Product product = productRepository.findById(id).get();
-		ProductOrder existingProductOrder = productOrderRepository.findByCartIdAndProductId(cart.getId(),
-				product.getId());
-
-		if (existingProductOrder != null) {
-			existingProductOrder.setQuantity(existingProductOrder.getQuantity() + quantity);
-			existingProductOrder.setRegisteredAt(LocalDateTime.now());
-			productOrderRepository.save(existingProductOrder);
-			cart = getCurrentCart();
-			cart.calculateTotal();
-			cart = cartRepository.save(cart);
-			System.out.println(cart.getProductOrders().toString());
-			System.out.println(cart.getTotal());
-			return;
-		}
-
-		ProductOrder newProductOrder = new ProductOrder(product, cart, quantity);
-		productOrderRepository.save(newProductOrder);
-		cart = getCurrentCart();
-		cart.calculateTotal();
-		cartRepository.save(cart);
-		System.out.println(cart.getProductOrders().toString());
-		System.out.println(cart.getTotal());
-
-	}
-
-	@PostMapping("/sendOrder")
-	public String sendOrder() {
-		cart = getCurrentCart();
-		StringBuilder sb = new StringBuilder();
-		sb.append("Hello ");
-		sb.append(customer.getFirstName());
-		sb.append(" ");
-		sb.append(customer.getLastName());
-		sb.append("!\n");
-		sb.append("We've received your store order with the total value of: ");
-		sb.append(cart.getTotal());
-		sb.append(" RON.\n");
-		sb.append("Your products will arrive in front of your door as soon as possible!");
-		cart.getProductOrders().removeAll(cart.getProductOrders());
-		cart.calculateTotal();
-		cart = cartRepository.save(cart);
-		return sb.toString();
-	}
-
-	@DeleteMapping("/{productOrderId}/deleteProductOrder")
-	public void deleteProductOrder(@PathVariable Long productOrderId) {
-		cart = getCurrentCart();
-		cart.getProductOrders().removeIf(po -> po.getId().equals(productOrderId));
-		cart.calculateTotal();
-		cart = cartRepository.save(cart);
 	}
 
 	@PutMapping("/{id}")
@@ -165,16 +103,6 @@ public class ProductController {
 		updatedProduct.setPrice(newPrice);
 		productRepository.save(updatedProduct);
 		return ResponseEntity.ok(updatedProduct);
-	}
-
-	private void initCustomerAndCart() {
-		customer = customerRepository.findById(1L).get();
-		cart = customer.getCart();
-		System.out.println("Customer init");
-	}
-
-	private Cart getCurrentCart() {
-		return cartRepository.findByCustomerId(customer.getId());
 	}
 
 }
