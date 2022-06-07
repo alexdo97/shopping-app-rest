@@ -71,8 +71,8 @@ public class ProductController {
 		}
 
 		Product product = productRepository.findById(id).get();
-		ProductOrder existingProductOrder = productOrderRepository.findByCartIdAndProductId(product.getId(),
-				cart.getId());
+		ProductOrder existingProductOrder = productOrderRepository.findByCartIdAndProductId(cart.getId(),
+				product.getId());
 
 		if (existingProductOrder != null) {
 			existingProductOrder.setQuantity(existingProductOrder.getQuantity() + quantity);

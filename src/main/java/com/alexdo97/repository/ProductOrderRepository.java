@@ -8,5 +8,6 @@ import com.alexdo97.model.ProductOrder;
 @Repository
 public interface ProductOrderRepository extends JpaRepository<ProductOrder, Long> {
 
-	ProductOrder findByCartIdAndProductId(Long productId, Long cartId);
+	ProductOrder findByCartIdAndProductId(Long cartId, Long productId);
+	
 }
