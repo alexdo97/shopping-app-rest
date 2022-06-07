@@ -22,10 +22,10 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "cart", fetch = FetchType.LAZY)
 	private Customer customer;
 
-	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ProductOrder> productOrders;
 
 	private double total;
