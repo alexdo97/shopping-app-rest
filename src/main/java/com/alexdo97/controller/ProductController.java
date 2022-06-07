@@ -96,6 +96,24 @@ public class ProductController {
 
 	}
 
+	@PostMapping("/sendOrder")
+	public String sendOrder() {
+		cart = getCurrentCart();
+		StringBuilder sb = new StringBuilder();
+		sb.append("Hello ");
+		sb.append(customer.getFirstName());
+		sb.append(" ");
+		sb.append(customer.getLastName());
+		sb.append("!\n");
+		sb.append("We've received your store order with the total value of: ");
+		sb.append(cart.getTotal());
+		sb.append(" RON.\n");
+		sb.append("Your products will arrive in front of your door as soon as possible!");
+		cart.getProductOrders().removeAll(cart.getProductOrders());
+		cart.calculateTotal();
+		cart = cartRepository.save(cart);
+		return sb.toString();
+	}
 	@PutMapping("/{id}")
 	public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product newProduct, @PathVariable Long id) {
 		Product updatedProduct = productRepository.findById(id).map(product -> {
