@@ -1,7 +1,10 @@
 package com.alexdo97.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexdo97.enums.Category;
+import com.alexdo97.model.Cart;
+import com.alexdo97.model.Customer;
 import com.alexdo97.model.Product;
+import com.alexdo97.model.ProductOrder;
+import com.alexdo97.repository.CartRepository;
+import com.alexdo97.repository.CustomerRepository;
+import com.alexdo97.repository.ProductOrderRepository;
 import com.alexdo97.repository.ProductRepository;
 
 @RestController
@@ -26,6 +36,18 @@ public class ProductController {
 
 	@Autowired
 	ProductRepository productRepository;
+
+	@Autowired
+	CustomerRepository customerRepository;
+
+	@Autowired
+	ProductOrderRepository productOrderRepository;
+
+	@Autowired
+	CartRepository cartRepository;
+
+	Customer customer;
+	Cart cart;
 
 	@GetMapping("")
 	public List<Product> getProducts() {
@@ -40,6 +62,32 @@ public class ProductController {
 	@PostMapping("")
 	public Product createProduct(@Valid @RequestBody Product newProduct) {
 		return productRepository.save(newProduct);
+	}
+
+	@PostMapping("/{id}/add")
+	public void addProductToCart(@PathVariable Long id, @RequestParam int quantity) {
+		if (customer == null) {
+			initCustomerAndCart();
+		}
+		Product product = productRepository.findById(id).get();
+		ProductOrder existingProductOrder = productOrderRepository.findByCartIdAndProductId(product.getId(),
+				cart.getId());
+
+		if (existingProductOrder != null) {
+			existingProductOrder.setQuantity(existingProductOrder.getQuantity() + quantity);
+			existingProductOrder.setRegisteredAt(LocalDateTime.now());
+			cart = productOrderRepository.save(existingProductOrder).getCart();
+			cart.calculateTotal();
+			System.out.println(cart.getTotal());
+			cart = cartRepository.save(cart);
+			return;
+		}
+
+		ProductOrder newProductOrder = new ProductOrder(product, cart, quantity);
+		productOrderRepository.save(newProductOrder);
+		cart.calculateTotal();
+		System.out.println(cart.getTotal());
+		cart = cartRepository.save(cart);
 	}
 
 	@PutMapping("/{id}")
@@ -84,6 +132,12 @@ public class ProductController {
 		updatedProduct.setPrice(newPrice);
 		productRepository.save(updatedProduct);
 		return ResponseEntity.ok(updatedProduct);
+	}
+
+	private void initCustomerAndCart() {
+		customer = customerRepository.findById(1L).get();
+		cart = customer.getCart();
+		System.out.println("Customer init");
 	}
 
 }

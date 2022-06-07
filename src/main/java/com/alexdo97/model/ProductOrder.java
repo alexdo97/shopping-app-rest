@@ -2,14 +2,18 @@ package com.alexdo97.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "product_order")
@@ -19,11 +23,11 @@ public class ProductOrder {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cart_id", nullable = false)
 	private Cart cart;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
@@ -35,8 +39,9 @@ public class ProductOrder {
 	public ProductOrder() {
 	}
 
-	public ProductOrder(Product product, int quantity) {
+	public ProductOrder(Product product, Cart cart, int quantity) {
 		this.product = product;
+		this.cart = cart;
 		this.quantity = quantity;
 		this.registeredAt = LocalDateTime.now();
 	}

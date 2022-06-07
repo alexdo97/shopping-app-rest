@@ -2,13 +2,17 @@ package com.alexdo97.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "cart")
@@ -18,10 +22,10 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(mappedBy = "cart")
+	@OneToOne(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Customer customer;
 
-	@OneToMany(mappedBy = "cart")
+	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private List<ProductOrder> productOrders;
 
 	private double total;
@@ -66,6 +70,10 @@ public class Cart {
 
 	public void setTotal(double total) {
 		this.total = total;
+	}
+
+	public void calculateTotal() {
+		this.total = productOrders.stream().mapToDouble(p -> p.getProduct().getPrice() * p.getQuantity()).sum();
 	}
 
 }

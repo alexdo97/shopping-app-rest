@@ -3,6 +3,7 @@ package com.alexdo97.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -38,7 +39,7 @@ public class Customer {
 	@JsonBackReference
 	private Identity identity;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "cart_id", referencedColumnName = "id")
 	private Cart cart;
 
@@ -46,12 +47,13 @@ public class Customer {
 
 	}
 
-	public Customer(String firstName, String lastName, String email, String phoneNumber, Identity identity) {
+	public Customer(String firstName, String lastName, String email, String phoneNumber, Identity identity, Cart cart) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.identity = identity;
+		this.cart = cart;
 	}
 
 	public Long getId() {
