@@ -69,6 +69,7 @@ public class ProductController {
 		if (customer == null) {
 			initCustomerAndCart();
 		}
+
 		Product product = productRepository.findById(id).get();
 		ProductOrder existingProductOrder = productOrderRepository.findByCartIdAndProductId(product.getId(),
 				cart.getId());
@@ -76,8 +77,9 @@ public class ProductController {
 		if (existingProductOrder != null) {
 			existingProductOrder.setQuantity(existingProductOrder.getQuantity() + quantity);
 			existingProductOrder.setRegisteredAt(LocalDateTime.now());
-			cart = productOrderRepository.save(existingProductOrder).getCart();
-			cart.calculateTotal();
+			productOrderRepository.save(existingProductOrder);
+			cart = getCurrentCart();
+			System.out.println(cart.getProductOrders().toString());
 			System.out.println(cart.getTotal());
 			cart = cartRepository.save(cart);
 			return;
@@ -85,9 +87,12 @@ public class ProductController {
 
 		ProductOrder newProductOrder = new ProductOrder(product, cart, quantity);
 		productOrderRepository.save(newProductOrder);
+		cart = getCurrentCart();
 		cart.calculateTotal();
+		cartRepository.save(cart);
+		System.out.println(cart.getProductOrders().toString());
 		System.out.println(cart.getTotal());
-		cart = cartRepository.save(cart);
+
 	}
 
 	@PutMapping("/{id}")
@@ -138,6 +143,10 @@ public class ProductController {
 		customer = customerRepository.findById(1L).get();
 		cart = customer.getCart();
 		System.out.println("Customer init");
+	}
+
+	private Cart getCurrentCart() {
+		return cartRepository.findByCustomerId(customer.getId());
 	}
 
 }

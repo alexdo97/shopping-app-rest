@@ -23,7 +23,7 @@ public class ProductOrder {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "cart_id", nullable = false)
 	private Cart cart;
 
@@ -84,6 +84,12 @@ public class ProductOrder {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductOrder [id=" + id + ", cart=" + cart + ", product=" + product + ", quantity=" + quantity
+				+ ", registeredAt=" + registeredAt + "]";
 	}
 
 }

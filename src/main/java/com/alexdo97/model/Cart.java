@@ -25,13 +25,13 @@ public class Cart {
 	@OneToOne(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Customer customer;
 
-	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
 	private List<ProductOrder> productOrders;
 
 	private double total;
 
 	public Cart() {
-
+		this.total = productOrders.stream().mapToDouble(p -> p.getProduct().getPrice() * p.getQuantity()).sum();
 	}
 
 	public Cart(Customer customer, List<ProductOrder> productOrders) {
