@@ -18,105 +18,73 @@ import com.alexdo97.enums.Category;
 import com.alexdo97.model.Cart;
 import com.alexdo97.model.Customer;
 import com.alexdo97.model.Product;
-import com.alexdo97.repository.CartRepository;
-import com.alexdo97.repository.CustomerRepository;
-import com.alexdo97.repository.ProductRepository;
+import com.alexdo97.service.AdminService;
 
 @RestController
 @RequestMapping(value = "/admin")
 public class AdminController {
 
 	@Autowired
-	CustomerRepository customerRepository;
-
-	@Autowired
-	ProductRepository productRepository;
-
-	@Autowired
-	CartRepository cartRepository;
+	AdminService adminService;
 
 	// Customer end-points
 
 	@GetMapping("/customer")
 	public ResponseEntity<List<Customer>> getCustomers() {
-		List<Customer> customerList = customerRepository.findAll();
-		return ResponseEntity.ok(customerList);
+		return adminService.getCustomers();
 	}
 
 	@GetMapping("/customer/{id}")
 	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-		Customer customer = customerRepository.findById(id).get();
-		return ResponseEntity.ok(customer);
+		return adminService.getCustomerById(id);
 	}
 
 	@DeleteMapping("/customer/{id}")
 	public void deleteCustomer(@PathVariable Long id) {
-		customerRepository.deleteById(id);
+		adminService.deleteCustomer(id);
 	}
 
 	// Product end-points
 
 	@PostMapping("/product")
 	public ResponseEntity<Product> createProduct(@RequestBody Product newProduct) {
-		Product product = productRepository.save(newProduct);
-		return ResponseEntity.ok(product);
+		return adminService.createProduct(newProduct);
 	}
 
 	@PutMapping("/product/{id}")
 	public ResponseEntity<Product> updateProduct(@RequestBody Product newProduct, @PathVariable Long id) {
-		Product updatedProduct = productRepository.findById(id).map(product -> {
-			product.setName(newProduct.getName());
-			product.setCategory(newProduct.getCategory());
-			product.setPrice(newProduct.getPrice());
-			return productRepository.save(product);
-		}).orElseGet(() -> {
-			newProduct.setId(id);
-			return productRepository.save(newProduct);
-		});
-
-		return ResponseEntity.ok(updatedProduct);
+		return adminService.updateProduct(newProduct, id);
 	}
 
 	@DeleteMapping("/product/{id}")
 	public void deleteProduct(@PathVariable Long id) {
-		productRepository.deleteById(id);
+		adminService.deleteProduct(id);
 	}
 
 	@PatchMapping("/product/{id}/name/{newName}")
 	public ResponseEntity<Product> updateProductName(@PathVariable Long id, @PathVariable String newName) {
-		Product updatedProduct = productRepository.findById(id).get();
-		updatedProduct.setName(newName);
-		productRepository.save(updatedProduct);
-		return ResponseEntity.ok(updatedProduct);
+		return adminService.updateProductName(id, newName);
 	}
 
 	@PatchMapping("/product/{id}/category/{newCategory}")
 	public ResponseEntity<Product> updateProductCategory(@PathVariable Long id, @PathVariable Category newCategory) {
-		Product updatedProduct = productRepository.findById(id).get();
-		updatedProduct.setCategory(newCategory);
-		productRepository.save(updatedProduct);
-		return ResponseEntity.ok(updatedProduct);
+		return adminService.updateProductCategory(id, newCategory);
 	}
 
 	@PatchMapping("/product/{id}/price/{newPrice}")
 	public ResponseEntity<Product> updateProductPrice(@PathVariable Long id, @PathVariable double newPrice) {
-		Product updatedProduct = productRepository.findById(id).get();
-		updatedProduct.setPrice(newPrice);
-		productRepository.save(updatedProduct);
-		return ResponseEntity.ok(updatedProduct);
+		return adminService.updateProductPrice(id, newPrice);
 	}
 
 	// Cart end-points
 
 	@GetMapping("/cart")
 	public ResponseEntity<List<Cart>> getCarts() {
-		List<Cart> cartList = cartRepository.findAll();
-		return ResponseEntity.ok(cartList);
+		return adminService.getCarts();
 	}
 
 	@GetMapping("/cart/{id}")
 	public ResponseEntity<Cart> getCartById(@PathVariable Long id) {
-		Cart cart = cartRepository.findById(id).get();
-		return ResponseEntity.ok(cart);
+		return adminService.getCartById(id);
 	}
 }
