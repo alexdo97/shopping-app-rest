@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.alexdo97.enums.Category;
@@ -21,20 +22,30 @@ import com.alexdo97.repository.RoleRepository;
 @Component
 public class DataLoader implements ApplicationRunner {
 
+	@Autowired
 	private CustomerRepository customerRepository;
+
+	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	private static final String ADMIN_ROLE = "ADMIN";
 	private static final String USER_ROLE = "USER";
 
-	@Autowired
-	public DataLoader(CustomerRepository customerRepository, ProductRepository productRepository,
-			RoleRepository roleRepository) {
-		this.customerRepository = customerRepository;
-		this.productRepository = productRepository;
-		this.roleRepository = roleRepository;
-	}
+//	@Autowired
+//	public DataLoader(CustomerRepository customerRepository, ProductRepository productRepository,
+//			RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+//		this.customerRepository = customerRepository;
+//		this.productRepository = productRepository;
+//		this.roleRepository = roleRepository;
+//		this.passwordEncoder = passwordEncoder;
+//
+//	}
 
 	@Override
 	public void run(ApplicationArguments args) {
@@ -54,13 +65,13 @@ public class DataLoader implements ApplicationRunner {
 
 		// Add customers
 		customerRepository.save(new Customer("Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152",
-				new Identity("alexdo97", "admin", allRoles), new Cart()));
+				new Identity("alexdo97", getEncodedPassword("admin"), allRoles), new Cart()));
 		customerRepository.save(new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322",
-				new Identity("david123", "test", userRoleList), new Cart()));
+				new Identity("david123", getEncodedPassword("test"), userRoleList), new Cart()));
 		customerRepository.save(new Customer("Alin", "Badulea", "badulea66@yahoo.com", "0754652159",
-				new Identity("alinut", "alinnn123", adminRoleList), new Cart()));
+				new Identity("alinut", getEncodedPassword("alinnn123"), adminRoleList), new Cart()));
 		customerRepository.save(new Customer("Mattia", "Baiguini", "mattia.baiguinii@gmail.com", "0756772122",
-				new Identity("mattia", "mattia07", allRoles), new Cart()));
+				new Identity("mattia", getEncodedPassword("mattia07"), allRoles), new Cart()));
 
 		// Add products
 		productRepository.save(new Product("T-shirt", Category.Fashion, 60));
@@ -80,6 +91,10 @@ public class DataLoader implements ApplicationRunner {
 		productRepository.save(new Product("Vitamin C pills", Category.Medicine, 15));
 		productRepository.save(new Product("Bandage", Category.Medicine, 30));
 
+	}
+
+	public String getEncodedPassword(String password) {
+		return passwordEncoder.encode(password);
 	}
 
 }
