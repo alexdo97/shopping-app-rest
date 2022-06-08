@@ -46,16 +46,6 @@ public class CartController {
 	Customer customer;
 	Cart cart;
 
-	@GetMapping("")
-	public List<Cart> getCarts() {
-		return cartRepository.findAll();
-	}
-
-	@GetMapping("/{id}")
-	public Cart getCartById(@PathVariable Long id) {
-		return cartRepository.findById(id).get();
-	}
-
 	@PostMapping("/{id}/add")
 	public void addProductToCart(@PathVariable Long id, @RequestParam int quantity) {
 		if (customer == null) {

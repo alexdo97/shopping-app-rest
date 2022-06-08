@@ -26,23 +26,14 @@ public class CustomerController {
 	@Autowired
 	CustomerRepository customerRepository;
 
-	@GetMapping("")
-	public List<Customer> getCustomers() {
-		return customerRepository.findAll();
-	}
-
-	@GetMapping("/{id}")
-	public Customer getCustomerById(@PathVariable Long id) {
-		return customerRepository.findById(id).get();
-	}
-
-	@PostMapping("")
-	public Customer createCustomer(@Valid @RequestBody Customer newCustomer) {
-		return customerRepository.save(newCustomer);
+	@PostMapping()
+	public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
+		Customer savedCustomer = customerRepository.save(newCustomer);
+		return ResponseEntity.ok(savedCustomer);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Customer> updateCustomer(@Valid @RequestBody Customer newCustomer, @PathVariable Long id) {
+	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer newCustomer, @PathVariable Long id) {
 		Customer updatedCustomer = customerRepository.findById(id).map(customer -> {
 			customer.setFirstName(newCustomer.getFirstName());
 			customer.setLastName(newCustomer.getLastName());
@@ -55,11 +46,6 @@ public class CustomerController {
 		});
 
 		return ResponseEntity.ok(updatedCustomer);
-	}
-
-	@DeleteMapping("/{id}")
-	public void deleteCustomer(@PathVariable Long id) {
-		customerRepository.deleteById(id);
 	}
 
 	@PatchMapping("/{id}/firstName/{firstName}")

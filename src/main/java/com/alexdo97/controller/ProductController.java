@@ -37,72 +37,16 @@ public class ProductController {
 	@Autowired
 	ProductRepository productRepository;
 
-	@Autowired
-	CustomerRepository customerRepository;
-
-	@Autowired
-	ProductOrderRepository productOrderRepository;
-
-	@Autowired
-	CartRepository cartRepository;
-
-	@GetMapping("")
-	public List<Product> getProducts() {
-		return productRepository.findAll();
+	@GetMapping()
+	public ResponseEntity<List<Product>> getProducts() {
+		List<Product> productList = productRepository.findAll();
+		return ResponseEntity.ok(productList);
 	}
 
 	@GetMapping("/{id}")
-	public Product getProductById(@PathVariable Long id) {
-		return productRepository.findById(id).get();
-	}
-
-	@PostMapping("")
-	public Product createProduct(@Valid @RequestBody Product newProduct) {
-		return productRepository.save(newProduct);
-	}
-
-	@PutMapping("/{id}")
-	public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product newProduct, @PathVariable Long id) {
-		Product updatedProduct = productRepository.findById(id).map(product -> {
-			product.setName(newProduct.getName());
-			product.setCategory(newProduct.getCategory());
-			product.setPrice(newProduct.getPrice());
-			return productRepository.save(product);
-		}).orElseGet(() -> {
-			newProduct.setId(id);
-			return productRepository.save(newProduct);
-		});
-
-		return ResponseEntity.ok(updatedProduct);
-	}
-
-	@DeleteMapping("/{id}")
-	public void deleteProduct(@PathVariable Long id) {
-		productRepository.deleteById(id);
-	}
-
-	@PatchMapping("/{id}/name/{newName}")
-	public ResponseEntity<Product> updateProductName(@PathVariable Long id, @PathVariable String newName) {
-		Product updatedProduct = productRepository.findById(id).get();
-		updatedProduct.setName(newName);
-		productRepository.save(updatedProduct);
-		return ResponseEntity.ok(updatedProduct);
-	}
-
-	@PatchMapping("/{id}/category/{newCategory}")
-	public ResponseEntity<Product> updateProductCategory(@PathVariable Long id, @PathVariable Category newCategory) {
-		Product updatedProduct = productRepository.findById(id).get();
-		updatedProduct.setCategory(newCategory);
-		productRepository.save(updatedProduct);
-		return ResponseEntity.ok(updatedProduct);
-	}
-
-	@PatchMapping("/{id}/price/{newPrice}")
-	public ResponseEntity<Product> updateProductPrice(@PathVariable Long id, @PathVariable double newPrice) {
-		Product updatedProduct = productRepository.findById(id).get();
-		updatedProduct.setPrice(newPrice);
-		productRepository.save(updatedProduct);
-		return ResponseEntity.ok(updatedProduct);
+	public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+		Product product = productRepository.findById(id).get();
+		return ResponseEntity.ok(product);
 	}
 
 }
