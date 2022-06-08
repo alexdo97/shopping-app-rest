@@ -67,17 +67,17 @@ public class DataLoader implements ApplicationRunner {
 
 		newCustomer = new Customer("alexdo97", "Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152", new Cart());
 		newIdentity = new Identity("alexdo97", getEncodedPassword("admin"), new ArrayList<>(), newCustomer);
-		newIdentity.getRoles().add(adminRole);
+		newIdentity.getRoleList().add(adminRole);
 		identityRepository.save(newIdentity);
 
 		newCustomer = new Customer("david123", "David", "Dragomir", "david88@yahoo.com", "0754672322", new Cart());
 		newIdentity = new Identity("david123", getEncodedPassword("test"), new ArrayList<>(), newCustomer);
-		newIdentity.getRoles().add(userRole);
+		newIdentity.getRoleList().add(userRole);
 		identityRepository.save(newIdentity);
 
 		newCustomer = new Customer("alinut", "Alin", "Badulea", "badulea66@yahoo.com", "0754652159", new Cart());
 		newIdentity = new Identity("alinut", getEncodedPassword("test"), new ArrayList<>(), newCustomer);
-		newIdentity.getRoles().add(userRole);
+		newIdentity.getRoleList().add(userRole);
 		identityRepository.save(newIdentity);
 
 		// Add customers

@@ -27,10 +27,10 @@ public class IdentityService {
 	private PasswordEncoder passwordEncoder;
 
 	public Identity register(@RequestBody Identity identity) {
-		List<Role> newRoles = new ArrayList<>();
-		identity.getRoles().forEach(role -> newRoles.add(roleRepository.findById(role.getRoleName()).get()));
+		List<Role> newRoleList = new ArrayList<>();
+		identity.getRoleList().forEach(role -> newRoleList.add(roleRepository.findById(role.getRoleName()).get()));
 		identity.setPassword(getEncodedPassword(identity.getPassword()));
-		identity.setRoles(newRoles);
+		identity.setRoleList(newRoleList);
 		identity.getCustomer().setCart(new Cart());
 		return identityRepository.save(identity);
 	}

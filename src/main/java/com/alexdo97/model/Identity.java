@@ -30,7 +30,7 @@ public class Identity {
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "identity_role", joinColumns = @JoinColumn(name = "identity_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<Role> roles;
+	private List<Role> roleList;
 
 //	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
 //	@PrimaryKeyJoinColumn
@@ -44,10 +44,10 @@ public class Identity {
 
 	}
 
-	public Identity(String username, String password, List<Role> roles, Customer customer) {
+	public Identity(String username, String password, List<Role> roleList, Customer customer) {
 		this.username = username;
 		this.password = password;
-		this.roles = roles;
+		this.roleList = roleList;
 		this.customer = customer;
 	}
 
@@ -75,12 +75,12 @@ public class Identity {
 		this.customer = customer;
 	}
 
-	public List<Role> getRoles() {
-		return roles;
+	public List<Role> getRoleList() {
+		return roleList;
 	}
 
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+	public void setRoleList(List<Role> roleList) {
+		this.roleList = roleList;
 	}
 
 }
