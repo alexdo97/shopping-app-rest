@@ -6,11 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -19,6 +19,7 @@ public class Customer {
 
 	@Id
 	@Column(name = "username", nullable = false)
+	@JsonIgnore
 	private String username;
 
 	@Column(name = "last_name", nullable = false)
@@ -38,22 +39,25 @@ public class Customer {
 	@JsonManagedReference
 	private Cart cart;
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@MapsId
-	@JoinColumn(name = "username", nullable = false)
-	@JsonBackReference
+//	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+//	@MapsId
+//	@JoinColumn(name = "username", nullable = false)
+//	@JsonBackReference
+	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	@PrimaryKeyJoinColumn
+	@JsonIgnore
 	private Identity identity;
 
 	public Customer() {
 
 	}
 
-	public Customer(String firstName, String lastName, String email, String phoneNumber, Identity identity, Cart cart) {
+	public Customer(String username, String firstName, String lastName, String email, String phoneNumber, Cart cart) {
+		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
-		this.identity = identity;
 		this.cart = cart;
 	}
 

@@ -10,40 +10,45 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "identity")
 public class Identity {
 
 	@Id
-	@Column(unique = true, nullable = false)
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 
 	@Column(nullable = false)
+	@JsonIgnore
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "identity_role", joinColumns = @JoinColumn(name = "identity_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles;
 
-	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
-	@PrimaryKeyJoinColumn
-	@JsonManagedReference
+//	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
+//	@PrimaryKeyJoinColumn
+//	@JsonManagedReference
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@MapsId
+	@JoinColumn(name = "username", nullable = false)
 	private Customer customer;
 
 	public Identity() {
 
 	}
 
-	public Identity(String username, String password, List<Role> roles) {
+	public Identity(String username, String password, List<Role> roles, Customer customer) {
 		this.username = username;
 		this.password = password;
 		this.roles = roles;
+		this.customer = customer;
 	}
 
 	public String getUsername() {

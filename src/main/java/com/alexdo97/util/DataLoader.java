@@ -1,7 +1,6 @@
 package com.alexdo97.util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -16,6 +15,7 @@ import com.alexdo97.model.Identity;
 import com.alexdo97.model.Product;
 import com.alexdo97.model.Role;
 import com.alexdo97.repository.CustomerRepository;
+import com.alexdo97.repository.IdentityRepository;
 import com.alexdo97.repository.ProductRepository;
 import com.alexdo97.repository.RoleRepository;
 
@@ -30,6 +30,9 @@ public class DataLoader implements ApplicationRunner {
 
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private IdentityRepository identityRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -54,22 +57,38 @@ public class DataLoader implements ApplicationRunner {
 //		roleRepository.save(new Role(USER_ROLE, "This is user role"));
 
 		Role adminRole = new Role(ADMIN_ROLE, "This is admin role");
-		List<Role> adminRoleList = new ArrayList<>();
-		adminRoleList.add(adminRole);
+		roleRepository.save(adminRole);
 
 		Role userRole = new Role(USER_ROLE, "This is user role");
-		List<Role> userRoleList = new ArrayList<>();
-		userRoleList.add(userRole);
+		roleRepository.save(userRole);
+
+		Customer newCustomer;
+		Identity newIdentity;
+
+		newCustomer = new Customer("alexdo97", "Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152", new Cart());
+		newIdentity = new Identity("alexdo97", getEncodedPassword("admin"), new ArrayList<>(), newCustomer);
+		newIdentity.getRoles().add(adminRole);
+		identityRepository.save(newIdentity);
+
+		newCustomer = new Customer("david123", "David", "Dragomir", "david88@yahoo.com", "0754672322", new Cart());
+		newIdentity = new Identity("david123", getEncodedPassword("test"), new ArrayList<>(), newCustomer);
+		newIdentity.getRoles().add(userRole);
+		identityRepository.save(newIdentity);
+
+		newCustomer = new Customer("alinut", "Alin", "Badulea", "badulea66@yahoo.com", "0754652159", new Cart());
+		newIdentity = new Identity("alinut", getEncodedPassword("test"), new ArrayList<>(), newCustomer);
+		newIdentity.getRoles().add(userRole);
+		identityRepository.save(newIdentity);
 
 		// Add customers
-		customerRepository.save(new Customer("Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152",
-				new Identity("alexdo97", getEncodedPassword("admin"), adminRoleList), new Cart()));
-		customerRepository.save(new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322",
-				new Identity("david123", getEncodedPassword("test"), userRoleList), new Cart()));
-		customerRepository.save(new Customer("Alin", "Badulea", "badulea66@yahoo.com", "0754652159",
-				new Identity("alinut", getEncodedPassword("alinnn123"), new ArrayList<>()), new Cart()));
-		customerRepository.save(new Customer("Mattia", "Baiguini", "mattia.baiguinii@gmail.com", "0756772122",
-				new Identity("mattia", getEncodedPassword("mattia07"), new ArrayList<>()), new Cart()));
+//		customerRepository.save(new Customer("Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152",
+//				new Identity("alexdo97", getEncodedPassword("admin"), adminRoleList), new Cart()));
+//		customerRepository.save(new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322",
+//				new Identity("david123", getEncodedPassword("test"), userRoleList), new Cart()));
+//		customerRepository.save(new Customer("Alin", "Badulea", "badulea66@yahoo.com", "0754652159",
+//				new Identity("alinut", getEncodedPassword("alinnn123"), new ArrayList<>()), new Cart()));
+//		customerRepository.save(new Customer("Mattia", "Baiguini", "mattia.baiguinii@gmail.com", "0756772122",
+//				new Identity("mattia", getEncodedPassword("mattia07"), new ArrayList<>()), new Cart()));
 
 		// Add products
 		productRepository.save(new Product("T-shirt", Category.Fashion, 60));
