@@ -18,6 +18,7 @@ import com.alexdo97.enums.Category;
 import com.alexdo97.model.Cart;
 import com.alexdo97.model.Customer;
 import com.alexdo97.model.Product;
+import com.alexdo97.model.Role;
 import com.alexdo97.service.AdminService;
 
 @RestController
@@ -86,5 +87,12 @@ public class AdminController {
 	@GetMapping("/cart/{id}")
 	public ResponseEntity<Cart> getCartById(@PathVariable Long id) {
 		return adminService.getCartById(id);
+	}
+
+	// Role end-points
+
+	@PostMapping("/role")
+	public ResponseEntity<Role> createRole(@RequestBody Role newRole) {
+		return adminService.createRole(newRole);
 	}
 }

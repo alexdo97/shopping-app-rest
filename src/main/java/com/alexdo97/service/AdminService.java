@@ -12,9 +12,11 @@ import com.alexdo97.enums.Category;
 import com.alexdo97.model.Cart;
 import com.alexdo97.model.Customer;
 import com.alexdo97.model.Product;
+import com.alexdo97.model.Role;
 import com.alexdo97.repository.CartRepository;
 import com.alexdo97.repository.CustomerRepository;
 import com.alexdo97.repository.ProductRepository;
+import com.alexdo97.repository.RoleRepository;
 
 @Service
 public class AdminService {
@@ -27,6 +29,9 @@ public class AdminService {
 
 	@Autowired
 	CartRepository cartRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
 
 	public ResponseEntity<List<Customer>> getCustomers() {
 		List<Customer> customerList = customerRepository.findAll();
@@ -94,5 +99,10 @@ public class AdminService {
 	public ResponseEntity<Cart> getCartById(@PathVariable Long id) {
 		Cart cart = cartRepository.findById(id).get();
 		return ResponseEntity.ok(cart);
+	}
+
+	public ResponseEntity<Role> createRole(@RequestBody Role newRole) {
+		Role role = roleRepository.save(newRole);
+		return ResponseEntity.ok(role);
 	}
 }
