@@ -36,13 +36,13 @@ public class AdminController {
 	}
 
 	@GetMapping("/customer/{id}")
-	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-		return adminService.getCustomerById(id);
+	public ResponseEntity<Customer> getCustomerById(@PathVariable String username) {
+		return adminService.getCustomerById(username);
 	}
 
 	@DeleteMapping("/customer/{id}")
-	public void deleteCustomer(@PathVariable Long id) {
-		adminService.deleteCustomer(id);
+	public void deleteCustomer(@PathVariable String username) {
+		adminService.deleteCustomer(username);
 	}
 
 	// Product end-points

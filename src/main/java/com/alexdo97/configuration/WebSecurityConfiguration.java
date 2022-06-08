@@ -3,7 +3,6 @@ package com.alexdo97.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,11 +25,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 	@Autowired
-	@Lazy
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
-	@Lazy
 	private UserDetailsService jwtService;
 
 	@Bean

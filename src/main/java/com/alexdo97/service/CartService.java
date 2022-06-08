@@ -80,13 +80,13 @@ public class CartService {
 	// Until methods
 
 	private void initCustomerAndCart() {
-		customer = customerRepository.findById(1L).get();
+		customer = customerRepository.findById("alexdo97").get();
 		cart = customer.getCart();
 		System.out.println("Customer init");
 	}
 
 	private Cart getCurrentCart() {
-		return cartRepository.findByCustomerId(customer.getId());
+		return cartRepository.findByCustomerUsername(customer.getUsername());
 	}
 
 	private void updateExistingProductOrder(int quantity, ProductOrder existingProductOrder) {

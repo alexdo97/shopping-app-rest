@@ -26,29 +26,31 @@ public class CustomerController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer newCustomer, @PathVariable Long id) {
-		return customerService.updateCustomer(newCustomer, id);
+	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer newCustomer, @PathVariable String username) {
+		return customerService.updateCustomer(newCustomer, username);
 	}
 
 	@PatchMapping("/{id}/firstName/{firstName}")
-	public ResponseEntity<Customer> updateCustomerFirstName(@PathVariable Long id, @PathVariable String firstName) {
-		return customerService.updateCustomerFirstName(id, firstName);
+	public ResponseEntity<Customer> updateCustomerFirstName(@PathVariable String username,
+			@PathVariable String firstName) {
+		return customerService.updateCustomerFirstName(username, firstName);
 	}
 
 	@PatchMapping("/{id}/lastName/{lastName}")
-	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable Long id, @PathVariable String lastName) {
-		return customerService.updateCustomerLastName(id, lastName);
+	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable String username,
+			@PathVariable String lastName) {
+		return customerService.updateCustomerLastName(username, lastName);
 	}
 
 	@PatchMapping("/{id}/email/{newEmail}")
-	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable Long id, @PathVariable String newEmail) {
-		return customerService.updateCustomerEmail(id, newEmail);
+	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable String username, @PathVariable String newEmail) {
+		return customerService.updateCustomerEmail(username, newEmail);
 	}
 
 	@PatchMapping("/{id}/phoneNumber/{newPhoneNumber}")
-	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable Long id,
+	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable String username,
 			@PathVariable String newPhoneNumber) {
-		return customerService.updateCustomerPhoneNumber(id, newPhoneNumber);
+		return customerService.updateCustomerPhoneNumber(username, newPhoneNumber);
 	}
 
 }

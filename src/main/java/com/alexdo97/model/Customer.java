@@ -18,8 +18,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Customer {
 
 	@Id
-	@Column(name = "id", nullable = false)
-	private Long id;
+	@Column(name = "username", nullable = false)
+	private String username;
 
 	@Column(name = "last_name", nullable = false)
 	private String firstName;
@@ -33,16 +33,16 @@ public class Customer {
 	@Column(unique = true, nullable = false)
 	private String phoneNumber;
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@MapsId
-	@JoinColumn(name = "id", nullable = false)
-	@JsonBackReference
-	private Identity identity;
-
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "cart_id", referencedColumnName = "id")
 	@JsonManagedReference
 	private Cart cart;
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@MapsId
+	@JoinColumn(name = "username", nullable = false)
+	@JsonBackReference
+	private Identity identity;
 
 	public Customer() {
 
@@ -55,14 +55,6 @@ public class Customer {
 		this.phoneNumber = phoneNumber;
 		this.identity = identity;
 		this.cart = cart;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -111,6 +103,14 @@ public class Customer {
 
 	public void setCart(Cart cart) {
 		this.cart = cart;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

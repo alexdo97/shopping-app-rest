@@ -38,13 +38,13 @@ public class AdminService {
 		return ResponseEntity.ok(customerList);
 	}
 
-	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-		Customer customer = customerRepository.findById(id).get();
+	public ResponseEntity<Customer> getCustomerById(@PathVariable String username) {
+		Customer customer = customerRepository.findById(username).get();
 		return ResponseEntity.ok(customer);
 	}
 
-	public void deleteCustomer(@PathVariable Long id) {
-		customerRepository.deleteById(id);
+	public void deleteCustomer(@PathVariable String username) {
+		customerRepository.deleteById(username);
 	}
 
 	public ResponseEntity<Product> createProduct(@RequestBody Product newProduct) {

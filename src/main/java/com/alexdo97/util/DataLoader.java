@@ -50,28 +50,26 @@ public class DataLoader implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) {
 
-		roleRepository.save(new Role(ADMIN_ROLE, "This is admin role"));
-		roleRepository.save(new Role(USER_ROLE, "This is user role"));
+//		roleRepository.save(new Role(ADMIN_ROLE, "This is admin role"));
+//		roleRepository.save(new Role(USER_ROLE, "This is user role"));
 
-		List<Role> allRoles = roleRepository.findAll();
-
-		Role adminRole = roleRepository.findById(ADMIN_ROLE).get();
+		Role adminRole = new Role(ADMIN_ROLE, "This is admin role");
 		List<Role> adminRoleList = new ArrayList<>();
 		adminRoleList.add(adminRole);
 
-		Role userRole = roleRepository.findById(USER_ROLE).get();
+		Role userRole = new Role(USER_ROLE, "This is user role");
 		List<Role> userRoleList = new ArrayList<>();
 		userRoleList.add(userRole);
 
 		// Add customers
 		customerRepository.save(new Customer("Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152",
-				new Identity("alexdo97", getEncodedPassword("admin"), allRoles), new Cart()));
+				new Identity("alexdo97", getEncodedPassword("admin"), adminRoleList), new Cart()));
 		customerRepository.save(new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322",
 				new Identity("david123", getEncodedPassword("test"), userRoleList), new Cart()));
 		customerRepository.save(new Customer("Alin", "Badulea", "badulea66@yahoo.com", "0754652159",
-				new Identity("alinut", getEncodedPassword("alinnn123"), adminRoleList), new Cart()));
+				new Identity("alinut", getEncodedPassword("alinnn123"), new ArrayList<>()), new Cart()));
 		customerRepository.save(new Customer("Mattia", "Baiguini", "mattia.baiguinii@gmail.com", "0756772122",
-				new Identity("mattia", getEncodedPassword("mattia07"), allRoles), new Cart()));
+				new Identity("mattia", getEncodedPassword("mattia07"), new ArrayList<>()), new Cart()));
 
 		// Add products
 		productRepository.save(new Product("T-shirt", Category.Fashion, 60));

@@ -8,5 +8,5 @@ import com.alexdo97.model.Cart;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-	Cart findByCustomerId(Long customerId);
+	Cart findByCustomerUsername(String username);
 }

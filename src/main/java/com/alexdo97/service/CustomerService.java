@@ -20,45 +20,47 @@ public class CustomerService {
 		return ResponseEntity.ok(savedCustomer);
 	}
 
-	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer newCustomer, @PathVariable Long id) {
-		Customer updatedCustomer = customerRepository.findById(id).map(customer -> {
+	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer newCustomer, @PathVariable String username) {
+		Customer updatedCustomer = customerRepository.findById(username).map(customer -> {
 			customer.setFirstName(newCustomer.getFirstName());
 			customer.setLastName(newCustomer.getLastName());
 			customer.setEmail(newCustomer.getEmail());
 			customer.setPhoneNumber(newCustomer.getPhoneNumber());
 			return customerRepository.save(customer);
 		}).orElseGet(() -> {
-			newCustomer.setId(id);
+			newCustomer.setUsername(username);
 			return customerRepository.save(newCustomer);
 		});
 
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	public ResponseEntity<Customer> updateCustomerFirstName(@PathVariable Long id, @PathVariable String firstName) {
-		Customer updatedCustomer = customerRepository.findById(id).get();
+	public ResponseEntity<Customer> updateCustomerFirstName(@PathVariable String username,
+			@PathVariable String firstName) {
+		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setFirstName(firstName);
 		customerRepository.save(updatedCustomer);
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable Long id, @PathVariable String lastName) {
-		Customer updatedCustomer = customerRepository.findById(id).get();
+	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable String username,
+			@PathVariable String lastName) {
+		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setLastName(lastName);
 		customerRepository.save(updatedCustomer);
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable Long id, @PathVariable String newEmail) {
-		Customer updatedCustomer = customerRepository.findById(id).get();
+	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable String username, @PathVariable String newEmail) {
+		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setEmail(newEmail);
 		customerRepository.save(updatedCustomer);
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
-	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable Long id,
+	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable String username,
 			@PathVariable String newPhoneNumber) {
-		Customer updatedCustomer = customerRepository.findById(id).get();
+		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setPhoneNumber(newPhoneNumber);
 		customerRepository.save(updatedCustomer);
 		return ResponseEntity.ok(updatedCustomer);
