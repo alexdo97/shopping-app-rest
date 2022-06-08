@@ -19,8 +19,6 @@ import com.alexdo97.util.JwtUtil;
 @Service
 public class IdentityService {
 
-	private static final String TOKEN_PREFIX = "Bearer ";
-
 	@Autowired
 	IdentityRepository identityRepository;
 
@@ -43,8 +41,8 @@ public class IdentityService {
 		return ResponseEntity.ok(identity);
 	}
 
-	public ResponseEntity<Identity> getIdentity(String attribute) {
-		String token = attribute.replace(TOKEN_PREFIX, "");
+	public ResponseEntity<Identity> getIdentity(String headerAttribute) {
+		String token = headerAttribute.replace(JwtUtil.TOKEN_PREFIX, "");
 		String username = jwtUtil.getUsernameFromToken(token);
 		Identity identity = identityRepository.findById(username).get();
 		return ResponseEntity.ok(identity);

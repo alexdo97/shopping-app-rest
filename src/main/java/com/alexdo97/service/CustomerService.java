@@ -39,30 +39,30 @@ public class CustomerService {
 			@PathVariable String firstName) {
 		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setFirstName(firstName);
-		customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(updatedCustomer);
+		Customer customer = customerRepository.save(updatedCustomer);
+		return ResponseEntity.ok(customer);
 	}
 
 	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable String username,
 			@PathVariable String lastName) {
 		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setLastName(lastName);
-		customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(updatedCustomer);
+		Customer customer = customerRepository.save(updatedCustomer);
+		return ResponseEntity.ok(customer);
 	}
 
 	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable String username, @PathVariable String newEmail) {
 		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setEmail(newEmail);
-		customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(updatedCustomer);
+		Customer customer = customerRepository.save(updatedCustomer);
+		return ResponseEntity.ok(customer);
 	}
 
 	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable String username,
 			@PathVariable String newPhoneNumber) {
 		Customer updatedCustomer = customerRepository.findById(username).get();
 		updatedCustomer.setPhoneNumber(newPhoneNumber);
-		customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(updatedCustomer);
+		Customer customer = customerRepository.save(updatedCustomer);
+		return ResponseEntity.ok(customer);
 	}
 }

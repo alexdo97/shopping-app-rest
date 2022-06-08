@@ -19,6 +19,9 @@ public class JwtUtil {
 
 	private static final int TOKEN_VALIDITY = 3600 * 5;
 
+	public static final String HEADER_STRING = "Authorization";
+	public static final String TOKEN_PREFIX = "Bearer ";
+
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
 	}

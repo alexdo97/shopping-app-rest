@@ -14,12 +14,11 @@ import com.alexdo97.model.JwtRequest;
 import com.alexdo97.model.JwtResponse;
 import com.alexdo97.service.IdentityService;
 import com.alexdo97.service.JwtService;
+import com.alexdo97.util.JwtUtil;
 
 @RestController
 @CrossOrigin
 public class AuthController {
-
-	private static final String HEADER_STRING = "Authorization";
 
 	@Autowired
 	private JwtService jwtService;
@@ -38,7 +37,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/identity")
-	public ResponseEntity<Identity> getIdentity(@RequestHeader(HEADER_STRING) String attribute) {
-		return identityService.getIdentity(attribute);
+	public ResponseEntity<Identity> getIdentity(@RequestHeader(JwtUtil.HEADER_STRING) String headerAttribute) {
+		return identityService.getIdentity(headerAttribute);
 	}
 }
