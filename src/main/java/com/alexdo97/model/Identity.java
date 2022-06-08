@@ -14,7 +14,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "identity")
@@ -25,7 +25,7 @@ public class Identity {
 	private String username;
 
 	@Column(nullable = false)
-	@JsonIgnore
+	@JsonBackReference
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
