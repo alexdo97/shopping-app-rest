@@ -44,11 +44,11 @@ public class DataLoader implements ApplicationRunner {
 
 		List<Role> allRoles = roleRepository.findAll();
 
-		Role adminRole = roleRepository.findByRoleName(ADMIN_ROLE);
+		Role adminRole = roleRepository.findById(ADMIN_ROLE).get();
 		List<Role> adminRoleList = new ArrayList<>();
 		adminRoleList.add(adminRole);
 
-		Role userRole = roleRepository.findByRoleName(USER_ROLE);
+		Role userRole = roleRepository.findById(USER_ROLE).get();
 		List<Role> userRoleList = new ArrayList<>();
 		userRoleList.add(userRole);
 
