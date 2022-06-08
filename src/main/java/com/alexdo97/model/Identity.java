@@ -1,11 +1,17 @@
 package com.alexdo97.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -27,6 +33,10 @@ public class Identity {
 	@Column(nullable = false)
 	private String password;
 
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "identity_role", joinColumns = @JoinColumn(name = "identity_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private List<Role> roles;
+
 	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@PrimaryKeyJoinColumn
 	@JsonManagedReference
@@ -36,9 +46,10 @@ public class Identity {
 
 	}
 
-	public Identity(String username, String password) {
+	public Identity(String username, String password, List<Role> roles) {
 		this.username = username;
 		this.password = password;
+		this.roles = roles;
 	}
 
 	public Long getId() {
@@ -71,6 +82,14 @@ public class Identity {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 }
