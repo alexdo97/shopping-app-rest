@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -32,7 +33,7 @@ public class JwtService implements UserDetailsService {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
+	public ResponseEntity<JwtResponse> createJwtToken(JwtRequest jwtRequest) throws Exception {
 		String userName = jwtRequest.getUserName();
 		String userPassword = jwtRequest.getUserPassword();
 		authenticate(userName, userPassword);
@@ -41,7 +42,8 @@ public class JwtService implements UserDetailsService {
 		String newGeneratedToken = jwtUtil.generateToken(userDetails);
 
 		Identity identity = identityRepository.findById(userName).get();
-		return new JwtResponse(identity, newGeneratedToken);
+		JwtResponse jwtResponse = new JwtResponse(identity, newGeneratedToken);
+		return ResponseEntity.ok(jwtResponse);
 	}
 
 	@Override
