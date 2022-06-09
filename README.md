@@ -1,4 +1,4 @@
-"# shopping-app-rest #" 
+#1 shopping-app-rest
 
 Created a rest application with Spring Boot, Hibernate, PostgreSQL as db, and JWT for auth.
 
