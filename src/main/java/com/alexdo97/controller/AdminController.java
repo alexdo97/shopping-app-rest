@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,6 +24,7 @@ import com.alexdo97.service.AdminService;
 
 @RestController
 @RequestMapping(value = "/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
 	@Autowired
@@ -35,12 +37,12 @@ public class AdminController {
 		return adminService.getCustomers();
 	}
 
-	@GetMapping("/customer/{id}")
+	@GetMapping("/customer/{username}")
 	public ResponseEntity<Customer> getCustomerById(@PathVariable String username) {
 		return adminService.getCustomerById(username);
 	}
 
-	@DeleteMapping("/customer/{id}")
+	@DeleteMapping("/customer/{username}")
 	public void deleteCustomer(@PathVariable String username) {
 		adminService.deleteCustomer(username);
 	}

@@ -1,8 +1,13 @@
 package com.alexdo97.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +20,9 @@ public class Role {
 
 	@Column(name = "role_description", nullable = false)
 	private String roleDescription;
+
+	@ManyToMany(mappedBy = "roleList", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Identity> identityList;
 
 	public Role() {
 

@@ -38,6 +38,7 @@ public class Identity {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@MapsId
 	@JoinColumn(name = "username", nullable = false)
+	@JsonBackReference
 	private Customer customer;
 
 	public Identity() {
