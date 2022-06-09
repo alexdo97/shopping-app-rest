@@ -1,12 +1,12 @@
 package com.alexdo97.model;
 
-import javax.persistence.Id;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.alexdo97.enums.Category;
@@ -19,11 +19,14 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	private String name;
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Category category;
 
+	@Column(nullable = false)
 	private double price;
 
 	public Product() {

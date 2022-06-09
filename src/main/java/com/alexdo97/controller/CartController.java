@@ -2,6 +2,8 @@ package com.alexdo97.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,8 @@ public class CartController {
 	CartService cartService;
 
 	@GetMapping()
-	public ResponseEntity<Cart> getCart() {
+	public ResponseEntity<Cart> getCart(@AuthenticationPrincipal User jwt) {
+		System.out.println(jwt);
 		return cartService.getCart();
 	}
 
