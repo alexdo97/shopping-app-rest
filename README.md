@@ -1,8 +1,8 @@
-"# shopping-app-rest" 
+"# shopping-app-rest #" 
 
 Created a rest application with Spring Boot, Hibernate, PostgreSQL as db, and JWT for auth.
 
-Computed URL:http://localhost:8080/api
+Computed URL: http://localhost:8080/api
 
 App description:
 Through the app, users can explore from a wide range of products and add them in their virtual cart. After the shopping process was finished, the user can place the order and the application will provide a billing message.
