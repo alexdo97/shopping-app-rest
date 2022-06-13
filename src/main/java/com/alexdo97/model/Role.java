@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "role")
 public class Role {
@@ -19,10 +21,12 @@ public class Role {
 	private String roleName;
 
 	@Column(nullable = false)
+	@JsonIgnore
 	private String description;
 
 	@ManyToMany(mappedBy = "roleList", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.DETACH })
+	@JsonIgnore
 	private List<Identity> identityList;
 
 	public Role() {

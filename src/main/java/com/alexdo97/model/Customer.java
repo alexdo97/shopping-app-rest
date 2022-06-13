@@ -10,8 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "customer")
@@ -19,7 +18,7 @@ public class Customer {
 
 	@Id
 	@Column(name = "username", nullable = false)
-	@JsonBackReference
+	@JsonIgnore
 	private String username;
 
 	@Column(name = "last_name", nullable = false)
@@ -36,7 +35,7 @@ public class Customer {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "cart_id", referencedColumnName = "id")
-	@JsonManagedReference
+	@JsonIgnore
 	private Cart cart;
 
 //	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

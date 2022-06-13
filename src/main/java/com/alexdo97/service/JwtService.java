@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +16,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.alexdo97.exception.HttpError;
 import com.alexdo97.model.Identity;
 import com.alexdo97.model.JwtRequest;
 import com.alexdo97.model.JwtResponse;
 import com.alexdo97.repository.IdentityRepository;
 import com.alexdo97.util.JwtUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class JwtService implements UserDetailsService {
 
@@ -33,21 +38,35 @@ public class JwtService implements UserDetailsService {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	public ResponseEntity<JwtResponse> createJwtToken(JwtRequest jwtRequest) throws Exception {
-		String userName = jwtRequest.getUserName();
-		String userPassword = jwtRequest.getUserPassword();
-		authenticate(userName, userPassword);
+	public ResponseEntity<JwtResponse> createJwtToken(JwtRequest jwtRequest) {
+		String userName = null;
+		String userPassword = null;
+		try {
+			userName = jwtRequest.getUserName();
+			userPassword = jwtRequest.getUserPassword();
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
 
-		UserDetails userDetails = loadUserByUsername(userName);
-		String newGeneratedToken = jwtUtil.generateToken(userDetails);
+			UserDetails userDetails = loadUserByUsername(userName);
+			String newGeneratedToken = jwtUtil.generateToken(userDetails);
 
-		Identity identity = identityRepository.findById(userName).get();
-		JwtResponse jwtResponse = new JwtResponse(identity, newGeneratedToken);
-		return ResponseEntity.ok(jwtResponse);
+			Identity identity = identityRepository.findById(userName).get();
+			JwtResponse jwtResponse = new JwtResponse(identity, newGeneratedToken);
+			return ResponseEntity.ok(jwtResponse);
+		} catch (DisabledException e) {
+			log.warn("User: " + userName + " is disabled", e);
+			throw HttpError.badRequest("Can't login. User: " + userName + " is disabled");
+		} catch (UsernameNotFoundException | BadCredentialsException | InternalAuthenticationServiceException e) {
+			log.warn("Invalid credentials", e);
+			throw HttpError.badRequest("Invalid username or password");
+		} catch (Exception e) {
+			log.error("Unknown error in login", e);
+			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
+		}
+
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) {
 		Identity identity = identityRepository.findById(username).get();
 
 		if (identity != null) {
@@ -64,15 +83,5 @@ public class JwtService implements UserDetailsService {
 			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
 		});
 		return authorities;
-	}
-
-	private void authenticate(String userName, String userPassword) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, userPassword));
-		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
-		}
 	}
 }

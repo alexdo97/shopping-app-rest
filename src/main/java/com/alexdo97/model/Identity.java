@@ -25,7 +25,6 @@ public class Identity {
 	private String username;
 
 	@Column(nullable = false)
-	@JsonBackReference
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH })
