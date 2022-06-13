@@ -18,8 +18,8 @@ public class Role {
 	@Column(name = "role_name", nullable = false)
 	private String roleName;
 
-	@Column(name = "role_description", nullable = false)
-	private String roleDescription;
+	@Column(nullable = false)
+	private String description;
 
 	@ManyToMany(mappedBy = "roleList", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Identity> identityList;
@@ -28,9 +28,9 @@ public class Role {
 
 	}
 
-	public Role(String roleName, String roleDescription) {
+	public Role(String roleName, String description) {
 		this.roleName = roleName;
-		this.roleDescription = roleDescription;
+		this.description = description;
 	}
 
 	public String getRoleName() {
@@ -41,11 +41,11 @@ public class Role {
 		this.roleName = roleName;
 	}
 
-	public String getRoleDescription() {
-		return roleDescription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setRoleDescription(String roleDescription) {
-		this.roleDescription = roleDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

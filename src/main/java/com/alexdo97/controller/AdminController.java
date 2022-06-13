@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexdo97.enums.Category;
@@ -38,8 +39,8 @@ public class AdminController {
 	}
 
 	@GetMapping("/customer/{username}")
-	public ResponseEntity<Customer> getCustomerById(@PathVariable String username) {
-		return adminService.getCustomerById(username);
+	public ResponseEntity<Customer> getCustomerByUsername(@PathVariable String username) {
+		return adminService.getCustomerByUsername(username);
 	}
 
 	@DeleteMapping("/customer/{username}")
@@ -55,8 +56,8 @@ public class AdminController {
 	}
 
 	@PutMapping("/product/{id}")
-	public ResponseEntity<Product> updateProduct(@RequestBody Product newProduct, @PathVariable Long id) {
-		return adminService.updateProduct(newProduct, id);
+	public ResponseEntity<Product> updateProduct(@RequestBody Product productDetails, @PathVariable Long id) {
+		return adminService.updateProduct(productDetails, id);
 	}
 
 	@DeleteMapping("/product/{id}")
@@ -64,19 +65,19 @@ public class AdminController {
 		adminService.deleteProduct(id);
 	}
 
-	@PatchMapping("/product/{id}/name/{newName}")
-	public ResponseEntity<Product> updateProductName(@PathVariable Long id, @PathVariable String newName) {
-		return adminService.updateProductName(id, newName);
+	@PatchMapping("/product/{id}/name")
+	public ResponseEntity<Product> updateProductName(@PathVariable Long id, @RequestParam String name) {
+		return adminService.updateProductName(id, name);
 	}
 
-	@PatchMapping("/product/{id}/category/{newCategory}")
-	public ResponseEntity<Product> updateProductCategory(@PathVariable Long id, @PathVariable Category newCategory) {
-		return adminService.updateProductCategory(id, newCategory);
+	@PatchMapping("/product/{id}/category")
+	public ResponseEntity<Product> updateProductCategory(@PathVariable Long id, @RequestParam Category category) {
+		return adminService.updateProductCategory(id, category);
 	}
 
-	@PatchMapping("/product/{id}/price/{newPrice}")
-	public ResponseEntity<Product> updateProductPrice(@PathVariable Long id, @PathVariable double newPrice) {
-		return adminService.updateProductPrice(id, newPrice);
+	@PatchMapping("/product/{id}/price")
+	public ResponseEntity<Product> updateProductPrice(@PathVariable Long id, @RequestParam double price) {
+		return adminService.updateProductPrice(id, price);
 	}
 
 	// Cart end-points
@@ -92,6 +93,11 @@ public class AdminController {
 	}
 
 	// Role end-points
+
+	@GetMapping("/role")
+	public ResponseEntity<List<Role>> getRoles() {
+		return adminService.getRoles();
+	}
 
 	@PostMapping("/role")
 	public ResponseEntity<Role> createRole(@RequestBody Role newRole) {

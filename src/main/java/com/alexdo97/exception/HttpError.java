@@ -14,8 +14,15 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class HttpError extends RuntimeException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private HttpStatus status;
 	private String message;
+
+	public static final String ERROR_MSG_UNKNOWN = "Unknown error. Please contact the support or open a new ticket";
 
 	public static HttpError notFound(String message) {
 		return builder().status(HttpStatus.NOT_FOUND).message(message).build();
