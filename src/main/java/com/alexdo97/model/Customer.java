@@ -43,7 +43,7 @@ public class Customer {
 //	@MapsId
 //	@JoinColumn(name = "username", nullable = false)
 //	@JsonBackReference
-	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@PrimaryKeyJoinColumn
 	private Identity identity;
 

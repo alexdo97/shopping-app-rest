@@ -3,14 +3,18 @@ package com.alexdo97.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alexdo97.enums.Category;
+import com.alexdo97.exception.AuthenticatedPrincialException;
 import com.alexdo97.exception.HttpError;
 import com.alexdo97.exception.NullAttributeException;
 import com.alexdo97.model.Cart;
@@ -19,6 +23,7 @@ import com.alexdo97.model.Product;
 import com.alexdo97.model.Role;
 import com.alexdo97.repository.CartRepository;
 import com.alexdo97.repository.CustomerRepository;
+import com.alexdo97.repository.IdentityRepository;
 import com.alexdo97.repository.ProductRepository;
 import com.alexdo97.repository.RoleRepository;
 
@@ -26,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional
 public class AdminService {
 
 	@Autowired
@@ -39,6 +45,9 @@ public class AdminService {
 
 	@Autowired
 	RoleRepository roleRepository;
+
+	@Autowired
+	IdentityRepository identityRepository;
 
 	public ResponseEntity<List<Customer>> getCustomers() {
 		try {
@@ -63,11 +72,21 @@ public class AdminService {
 		}
 	}
 
-	public void deleteCustomer(@PathVariable String username) {
+	public void deleteCustomer(User user, String username) {
 		try {
+			if (user.getUsername().equals(username)) {
+				throw new AuthenticatedPrincialException(
+						"Authenticated principal identity conflicts with provided identity for deletion");
+			}
 			customerRepository.deleteById(username);
-			log.info("Customer deleted with username: " + username);
-		} catch (EmptyResultDataAccessException e) {
+			log.info("Customer with username: " + username + " deleted");
+		} catch (AuthenticatedPrincialException e) {
+			log.error(
+					"The username provided for deletion of a customer is the same as the current authenticated principal: "
+							+ username);
+			throw HttpError.badRequest(
+					"You can't delete the customer you are currently logged as, with username: " + username);
+		} catch (EmptyResultDataAccessException | NoSuchElementException e) {
 			log.error("Couldn't delete customer. Customer not found with username: " + username, e);
 			throw HttpError.notFound("Customer with username: " + username + " not found for deletion");
 		} catch (Exception e) {
@@ -101,8 +120,9 @@ public class AdminService {
 				throw new NullAttributeException("At least one of the mandatory attributes is null");
 			}
 			Product updatedProduct = updateOrCreateProduct(productDetails, id);
-
+			log.info("Product with id: " + updatedProduct.getId() + " updated/created");
 			return ResponseEntity.ok(updatedProduct);
+
 		} catch (NullAttributeException e) {
 			log.error("At least one of the mandatory attributes of product is null");
 			throw HttpError.badRequest("Missing product data. Please fill all the mandatory fields");
@@ -116,6 +136,7 @@ public class AdminService {
 	public void deleteProduct(@PathVariable Long id) {
 		try {
 			productRepository.deleteById(id);
+			log.info("Product with id: " + id + " deleted");
 		} catch (EmptyResultDataAccessException e) {
 			log.error("Couldn't delete product. Product not found with id: " + id, e);
 			throw HttpError.notFound("Couldn't delete product. Product not found");

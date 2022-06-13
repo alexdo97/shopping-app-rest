@@ -21,7 +21,8 @@ public class Role {
 	@Column(nullable = false)
 	private String description;
 
-	@ManyToMany(mappedBy = "roleList", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "roleList", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH })
 	private List<Identity> identityList;
 
 	public Role() {

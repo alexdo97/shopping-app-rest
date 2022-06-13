@@ -28,14 +28,14 @@ public class Identity {
 	@JsonBackReference
 	private String password;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH })
 	@JoinTable(name = "identity_role", joinColumns = @JoinColumn(name = "identity_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roleList;
 
 //	@OneToOne(mappedBy = "identity", cascade = CascadeType.ALL, orphanRemoval = true)
 //	@PrimaryKeyJoinColumn
 //	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@MapsId
 	@JoinColumn(name = "username", nullable = false)
 	@JsonBackReference
