@@ -11,6 +11,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class JwtService implements UserDetailsService {
+public class AuthService implements UserDetailsService {
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -37,6 +38,9 @@ public class JwtService implements UserDetailsService {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private IdentityService identityService;
 
 	public ResponseEntity<JwtResponse> createJwtToken(JwtRequest jwtRequest) {
 		String userName = null;
@@ -65,6 +69,14 @@ public class JwtService implements UserDetailsService {
 
 	}
 
+	public ResponseEntity<Identity> createIdentity(Identity newIdentity) {
+		return identityService.createIdentity(newIdentity);
+	}
+
+	public ResponseEntity<Identity> getIdentity(User user) {
+		return identityService.getIdentity(user);
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		Identity identity = identityRepository.findById(username).get();
@@ -76,6 +88,8 @@ public class JwtService implements UserDetailsService {
 			throw new UsernameNotFoundException("User not found with username: " + username);
 		}
 	}
+
+	// private methods
 
 	private Set<SimpleGrantedAuthority> getAuthority(Identity identity) {
 		Set<SimpleGrantedAuthority> authorities = new HashSet<>();

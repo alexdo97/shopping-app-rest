@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alexdo97.exception.EmailException;
 import com.alexdo97.exception.HttpError;
@@ -46,7 +45,7 @@ public class IdentityService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public ResponseEntity<Identity> createIdentity(@RequestBody Identity newIdentity) {
+	public ResponseEntity<Identity> createIdentity(Identity newIdentity) {
 		Customer customerDetails = null;
 		try {
 			customerDetails = newIdentity.getCustomer();
