@@ -101,7 +101,7 @@ public class IdentityService {
 		}
 		customerOptional = customerRepository.findByPhoneNumber(customerDetails.getPhoneNumber());
 		if (!customerOptional.isEmpty()) {
-			throw new PhoneNumberException("Duplicate phoneNumbers");
+			throw new PhoneNumberException("Duplicate phone numbers");
 		}
 	}
 

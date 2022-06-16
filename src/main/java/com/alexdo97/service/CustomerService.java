@@ -1,68 +1,104 @@
 package com.alexdo97.service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.alexdo97.exception.EmailException;
+import com.alexdo97.exception.HttpError;
+import com.alexdo97.exception.PhoneNumberException;
 import com.alexdo97.model.Customer;
 import com.alexdo97.repository.CustomerRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CustomerService {
 
 	@Autowired
 	CustomerRepository customerRepository;
 
-	public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
-		Customer savedCustomer = customerRepository.save(newCustomer);
-		return ResponseEntity.ok(savedCustomer);
+	public ResponseEntity<Customer> updateCustomerFirstName(User user, String newFirstName) {
+		try {
+			Customer updatedCustomer = customerRepository.findById(user.getUsername()).get();
+			updatedCustomer.setFirstName(newFirstName);
+			Customer customer = customerRepository.save(updatedCustomer);
+			log.info("Customer's first name with username: " + user.getUsername() + " updated");
+			return ResponseEntity.ok(customer);
+		} catch (NoSuchElementException e) {
+			log.error("Customer not found with username: " + user.getUsername(), e);
+			throw HttpError.notFound("Customer not found");
+		} catch (Exception e) {
+			log.error("Unknown error in updating customer with username: " + user.getUsername(), e);
+			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
+		}
+
 	}
 
-	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer newCustomer, @PathVariable String username) {
-		Customer updatedCustomer = customerRepository.findById(username).map(customer -> {
-			customer.setFirstName(newCustomer.getFirstName());
-			customer.setLastName(newCustomer.getLastName());
-			customer.setEmail(newCustomer.getEmail());
-			customer.setPhoneNumber(newCustomer.getPhoneNumber());
-			return customerRepository.save(customer);
-		}).orElseGet(() -> {
-			newCustomer.setUsername(username);
-			return customerRepository.save(newCustomer);
-		});
-
-		return ResponseEntity.ok(updatedCustomer);
+	public ResponseEntity<Customer> updateCustomerLastName(User user, String newLastName) {
+		try {
+			Customer updatedCustomer = customerRepository.findById(user.getUsername()).get();
+			updatedCustomer.setLastName(newLastName);
+			Customer customer = customerRepository.save(updatedCustomer);
+			log.info("Customer's last name with username: " + user.getUsername() + " updated");
+			return ResponseEntity.ok(customer);
+		} catch (NoSuchElementException e) {
+			log.error("Customer not found with username: " + user.getUsername(), e);
+			throw HttpError.notFound("Customer not found");
+		} catch (Exception e) {
+			log.error("Unknown error in updating customer with username: " + user.getUsername(), e);
+			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
+		}
 	}
 
-	public ResponseEntity<Customer> updateCustomerFirstName(@PathVariable String username,
-			@PathVariable String firstName) {
-		Customer updatedCustomer = customerRepository.findById(username).get();
-		updatedCustomer.setFirstName(firstName);
-		Customer customer = customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(customer);
+	public ResponseEntity<Customer> updateCustomerEmail(User user, String newEmail) {
+		Optional<Customer> existingCustomer = customerRepository.findByEmail(newEmail);
+		try {
+			if (existingCustomer.isPresent()) {
+				throw new EmailException("Duplicate emails");
+			}
+			Customer updatedCustomer = customerRepository.findById(user.getUsername()).get();
+			updatedCustomer.setEmail(newEmail);
+			Customer customer = customerRepository.save(updatedCustomer);
+			log.info("Customer's email with username: " + user.getUsername() + " updated");
+			return ResponseEntity.ok(customer);
+		} catch (EmailException e) {
+			log.warn("Another customer already exists with email: " + newEmail, e);
+			throw HttpError.badRequest("Customer already exists with email: " + newEmail);
+		} catch (NoSuchElementException e) {
+			log.error("Another customer not found with username: " + user.getUsername(), e);
+			throw HttpError.notFound("Customer not found");
+		} catch (Exception e) {
+			log.error("Unknown error in updating customer with username: " + user.getUsername(), e);
+			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
+		}
 	}
 
-	public ResponseEntity<Customer> updateCustomerLastName(@PathVariable String username,
-			@PathVariable String lastName) {
-		Customer updatedCustomer = customerRepository.findById(username).get();
-		updatedCustomer.setLastName(lastName);
-		Customer customer = customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(customer);
-	}
-
-	public ResponseEntity<Customer> updateCustomerEmail(@PathVariable String username, @PathVariable String newEmail) {
-		Customer updatedCustomer = customerRepository.findById(username).get();
-		updatedCustomer.setEmail(newEmail);
-		Customer customer = customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(customer);
-	}
-
-	public ResponseEntity<Customer> updateCustomerPhoneNumber(@PathVariable String username,
-			@PathVariable String newPhoneNumber) {
-		Customer updatedCustomer = customerRepository.findById(username).get();
-		updatedCustomer.setPhoneNumber(newPhoneNumber);
-		Customer customer = customerRepository.save(updatedCustomer);
-		return ResponseEntity.ok(customer);
+	public ResponseEntity<Customer> updateCustomerPhoneNumber(User user, String newPhoneNumber) {
+		try {
+			Optional<Customer> existingCustomer = customerRepository.findByPhoneNumber(newPhoneNumber);
+			if (existingCustomer.isPresent()) {
+				throw new PhoneNumberException("Duplicate phone numbers");
+			}
+			Customer updatedCustomer = customerRepository.findById(user.getUsername()).get();
+			updatedCustomer.setPhoneNumber(newPhoneNumber);
+			Customer customer = customerRepository.save(updatedCustomer);
+			log.info("Customer's phone number with username: " + user.getUsername() + " updated");
+			return ResponseEntity.ok(customer);
+		} catch (PhoneNumberException e) {
+			log.warn("Another customer already exists with phone number: " + newPhoneNumber, e);
+			throw HttpError.badRequest("Another customer already exists with phone number: " + newPhoneNumber);
+		} catch (NoSuchElementException e) {
+			log.error("Customer not found with username: " + user.getUsername(), e);
+			throw HttpError.notFound("Customer not found");
+		} catch (Exception e) {
+			log.error("Unknown error in updating customer with username: " + user.getUsername(), e);
+			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
+		}
 	}
 }
