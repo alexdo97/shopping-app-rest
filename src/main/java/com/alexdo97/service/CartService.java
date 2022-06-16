@@ -20,7 +20,6 @@ import com.alexdo97.model.ProductOrder;
 import com.alexdo97.repository.CartRepository;
 import com.alexdo97.repository.CustomerRepository;
 import com.alexdo97.repository.ProductOrderRepository;
-import com.alexdo97.repository.ProductRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,20 +27,23 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CartService {
 
-	@Autowired
-	CustomerRepository customerRepository;
+	private CustomerRepository customerRepository;
+	private ProductOrderRepository productOrderRepository;
+	private CartRepository cartRepository;
+	private ProductService productService;
+
+	public CartService() {
+
+	}
 
 	@Autowired
-	ProductRepository productRepository;
-
-	@Autowired
-	ProductOrderRepository productOrderRepository;
-
-	@Autowired
-	CartRepository cartRepository;
-
-	@Autowired
-	ProductService productService;
+	public CartService(CustomerRepository customerRepository, ProductOrderRepository productOrderRepository,
+			CartRepository cartRepository, ProductService productService) {
+		this.customerRepository = customerRepository;
+		this.productOrderRepository = productOrderRepository;
+		this.cartRepository = cartRepository;
+		this.productService = productService;
+	}
 
 	public ResponseEntity<Cart> getCart(User user) {
 
@@ -127,7 +129,7 @@ public class CartService {
 		}
 	}
 
-	// private methods
+	// PRIVATE METHODS
 
 	private Customer validateAndGetCustomer(User user) {
 		try {
@@ -170,6 +172,40 @@ public class CartService {
 		sb.append(" RON.\n");
 		sb.append("Your products will arrive in front of your door as soon as possible!");
 		return sb.toString();
+	}
+
+	// GETTERS AND SETTERS
+
+	public CustomerRepository getCustomerRepository() {
+		return customerRepository;
+	}
+
+	public void setCustomerRepository(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
+
+	public ProductOrderRepository getProductOrderRepository() {
+		return productOrderRepository;
+	}
+
+	public void setProductOrderRepository(ProductOrderRepository productOrderRepository) {
+		this.productOrderRepository = productOrderRepository;
+	}
+
+	public CartRepository getCartRepository() {
+		return cartRepository;
+	}
+
+	public void setCartRepository(CartRepository cartRepository) {
+		this.cartRepository = cartRepository;
+	}
+
+	public ProductService getProductService() {
+		return productService;
+	}
+
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
 	}
 
 }

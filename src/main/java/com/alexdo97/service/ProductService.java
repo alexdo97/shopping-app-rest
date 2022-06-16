@@ -20,6 +20,15 @@ public class ProductService {
 	@Autowired
 	ProductRepository productRepository;
 
+	public ProductService() {
+
+	}
+
+	@Autowired
+	public ProductService(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
+
 	public ResponseEntity<List<Product>> getProducts() {
 		try {
 			List<Product> productList = productRepository.findAll();
@@ -42,4 +51,15 @@ public class ProductService {
 			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
 		}
 	}
+
+	// GETTERS AND SETTERS
+
+	public ProductRepository getProductRepository() {
+		return productRepository;
+	}
+
+	public void setProductRepository(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
+
 }

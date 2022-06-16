@@ -23,7 +23,6 @@ import com.alexdo97.model.Product;
 import com.alexdo97.model.Role;
 import com.alexdo97.repository.CartRepository;
 import com.alexdo97.repository.CustomerRepository;
-import com.alexdo97.repository.IdentityRepository;
 import com.alexdo97.repository.ProductRepository;
 import com.alexdo97.repository.RoleRepository;
 
@@ -34,20 +33,23 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class AdminService {
 
-	@Autowired
-	CustomerRepository customerRepository;
+	private CustomerRepository customerRepository;
+	private ProductRepository productRepository;
+	private CartRepository cartRepository;
+	private RoleRepository roleRepository;
+
+	public AdminService() {
+
+	}
 
 	@Autowired
-	ProductRepository productRepository;
-
-	@Autowired
-	CartRepository cartRepository;
-
-	@Autowired
-	RoleRepository roleRepository;
-
-	@Autowired
-	IdentityRepository identityRepository;
+	public AdminService(CustomerRepository customerRepository, ProductRepository productRepository,
+			CartRepository cartRepository, RoleRepository roleRepository) {
+		this.customerRepository = customerRepository;
+		this.productRepository = productRepository;
+		this.cartRepository = cartRepository;
+		this.roleRepository = roleRepository;
+	}
 
 	public ResponseEntity<List<Customer>> getCustomers() {
 		try {
@@ -245,7 +247,7 @@ public class AdminService {
 		}
 	}
 
-	// private methods
+	// PRIVATE METHODS
 
 	private boolean productHasNullAttributes(Product product) {
 		if (product.getName() == null || product.getCategory() == null) {
@@ -277,5 +279,39 @@ public class AdminService {
 			return product;
 		});
 		return updatedProduct;
+	}
+
+	// GETTERS AND SETTERS
+
+	public CustomerRepository getCustomerRepository() {
+		return customerRepository;
+	}
+
+	public void setCustomerRepository(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
+
+	public ProductRepository getProductRepository() {
+		return productRepository;
+	}
+
+	public void setProductRepository(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
+
+	public CartRepository getCartRepository() {
+		return cartRepository;
+	}
+
+	public void setCartRepository(CartRepository cartRepository) {
+		this.cartRepository = cartRepository;
+	}
+
+	public RoleRepository getRoleRepository() {
+		return roleRepository;
+	}
+
+	public void setRoleRepository(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
 	}
 }

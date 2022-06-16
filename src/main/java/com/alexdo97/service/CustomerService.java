@@ -20,8 +20,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CustomerService {
 
+	private CustomerRepository customerRepository;
+
+	public CustomerService() {
+
+	}
+
 	@Autowired
-	CustomerRepository customerRepository;
+	public CustomerService(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
 
 	public ResponseEntity<Customer> updateCustomerFirstName(User user, String newFirstName) {
 		try {
@@ -100,5 +108,15 @@ public class CustomerService {
 			log.error("Unknown error in updating customer with username: " + user.getUsername(), e);
 			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
 		}
+	}
+
+	// GETTERS AND SETTERS
+
+	public CustomerRepository getCustomerRepository() {
+		return customerRepository;
+	}
+
+	public void setCustomerRepository(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
 	}
 }

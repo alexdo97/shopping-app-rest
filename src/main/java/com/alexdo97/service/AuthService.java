@@ -30,17 +30,23 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class AuthService implements UserDetailsService {
 
-	@Autowired
 	private JwtUtil jwtUtil;
-
-	@Autowired
 	private IdentityRepository identityRepository;
-
-	@Autowired
 	private AuthenticationManager authenticationManager;
+	private IdentityService identityService;
+
+	public AuthService() {
+
+	}
 
 	@Autowired
-	private IdentityService identityService;
+	public AuthService(JwtUtil jwtUtil, IdentityRepository identityRepository,
+			AuthenticationManager authenticationManager, IdentityService identityService) {
+		this.jwtUtil = jwtUtil;
+		this.identityRepository = identityRepository;
+		this.authenticationManager = authenticationManager;
+		this.identityService = identityService;
+	}
 
 	public ResponseEntity<JwtResponse> createJwtToken(JwtRequest jwtRequest) {
 		String userName = null;
@@ -89,7 +95,7 @@ public class AuthService implements UserDetailsService {
 		}
 	}
 
-	// private methods
+	// PRIVATE METHODS
 
 	private Set<SimpleGrantedAuthority> getAuthority(Identity identity) {
 		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
@@ -98,4 +104,39 @@ public class AuthService implements UserDetailsService {
 		});
 		return authorities;
 	}
+
+	// GETTERS AND SETTERS
+
+	public JwtUtil getJwtUtil() {
+		return jwtUtil;
+	}
+
+	public void setJwtUtil(JwtUtil jwtUtil) {
+		this.jwtUtil = jwtUtil;
+	}
+
+	public IdentityRepository getIdentityRepository() {
+		return identityRepository;
+	}
+
+	public void setIdentityRepository(IdentityRepository identityRepository) {
+		this.identityRepository = identityRepository;
+	}
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
+
+	public IdentityService getIdentityService() {
+		return identityService;
+	}
+
+	public void setIdentityService(IdentityService identityService) {
+		this.identityService = identityService;
+	}
+
 }

@@ -22,7 +22,6 @@ import com.alexdo97.model.Role;
 import com.alexdo97.repository.CustomerRepository;
 import com.alexdo97.repository.IdentityRepository;
 import com.alexdo97.repository.RoleRepository;
-import com.alexdo97.util.JwtUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,20 +29,23 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class IdentityService {
 
-	@Autowired
-	IdentityRepository identityRepository;
-
-	@Autowired
-	RoleRepository roleRepository;
-
-	@Autowired
-	CustomerRepository customerRepository;
-
-	@Autowired
-	JwtUtil jwtUtil;
-
-	@Autowired
+	private IdentityRepository identityRepository;
+	private RoleRepository roleRepository;
+	private CustomerRepository customerRepository;
 	private PasswordEncoder passwordEncoder;
+
+	public IdentityService() {
+
+	}
+
+	@Autowired
+	public IdentityService(IdentityRepository identityRepository, RoleRepository roleRepository,
+			CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+		this.identityRepository = identityRepository;
+		this.roleRepository = roleRepository;
+		this.customerRepository = customerRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	public ResponseEntity<Identity> createIdentity(Identity newIdentity) {
 		Customer customerDetails = null;
@@ -90,7 +92,7 @@ public class IdentityService {
 		return passwordEncoder.encode(password);
 	}
 
-	// private methods
+	// PRIVATE METHODS
 
 	private void validateCustomerDetails(Identity newIdentity, Customer customerDetails)
 			throws UsernameException, EmailException, PhoneNumberException {
@@ -117,4 +119,39 @@ public class IdentityService {
 		newIdentity.setRoleList(newRoleList);
 		newIdentity.getCustomer().setCart(new Cart());
 	}
+
+	// GETTERS AND SETTERS
+
+	public IdentityRepository getIdentityRepository() {
+		return identityRepository;
+	}
+
+	public void setIdentityRepository(IdentityRepository identityRepository) {
+		this.identityRepository = identityRepository;
+	}
+
+	public RoleRepository getRoleRepository() {
+		return roleRepository;
+	}
+
+	public void setRoleRepository(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
+	}
+
+	public CustomerRepository getCustomerRepository() {
+		return customerRepository;
+	}
+
+	public void setCustomerRepository(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
+
+	public PasswordEncoder getPasswordEncoder() {
+		return passwordEncoder;
+	}
+
+	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
+
 }
