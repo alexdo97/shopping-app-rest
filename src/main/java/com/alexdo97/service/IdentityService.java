@@ -76,9 +76,14 @@ public class IdentityService {
 	}
 
 	public ResponseEntity<Identity> getIdentity(User user) {
-		Identity identity = identityRepository.findById(user.getUsername()).get();
-		identity.setPassword("REDACTED");
-		return ResponseEntity.ok(identity);
+		try {
+			Identity identity = identityRepository.findById(user.getUsername()).get();
+			identity.setPassword("REDACTED");
+			return ResponseEntity.ok(identity);
+		} catch (Exception e) {
+			log.error("Unknown error in returning identity with username: " + user.getUsername(), e);
+			throw HttpError.internalServerError(HttpError.ERROR_MSG_UNKNOWN);
+		}
 	}
 
 	public String getEncodedPassword(String password) {

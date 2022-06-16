@@ -23,24 +23,24 @@ public class CartController {
 	CartService cartService;
 
 	@GetMapping()
-	public ResponseEntity<Cart> getCart(@AuthenticationPrincipal User jwt) {
-		System.out.println(jwt);
-		return cartService.getCart();
+	public ResponseEntity<Cart> getCart(@AuthenticationPrincipal User user) {
+		return cartService.getCart(user);
 	}
 
-	@PostMapping("/{id}/add")
-	public void addProductToCart(@PathVariable Long id, @RequestParam int quantity) {
-		cartService.addProductToCart(id, quantity);
+	@PostMapping("/{productId}/addProduct")
+	public ResponseEntity<Cart> addProductToCart(@AuthenticationPrincipal User user, @PathVariable Long productId,
+			@RequestParam int quantity) {
+		return cartService.addProductToCart(user, productId, quantity);
 	}
 
 	@PostMapping("/sendOrder")
-	public String sendOrder() {
-		return cartService.sendOrder();
+	public String sendOrder(@AuthenticationPrincipal User user) {
+		return cartService.sendOrder(user);
 	}
 
 	@DeleteMapping("/{productOrderId}/deleteProductOrder")
-	public void deleteProductOrder(@PathVariable Long productOrderId) {
-		cartService.deleteProductOrder(productOrderId);
+	public void deleteProductOrder(@AuthenticationPrincipal User user, @PathVariable Long productOrderId) {
+		cartService.deleteProductOrder(user, productOrderId);
 	}
 
 }
