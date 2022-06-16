@@ -28,25 +28,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class AuthService implements UserDetailsService {
-
-	private JwtUtil jwtUtil;
-	private IdentityRepository identityRepository;
-	private AuthenticationManager authenticationManager;
-	private IdentityService identityService;
-
-	public AuthService() {
-
-	}
+public class JwtService implements UserDetailsService {
 
 	@Autowired
-	public AuthService(JwtUtil jwtUtil, IdentityRepository identityRepository,
-			AuthenticationManager authenticationManager, IdentityService identityService) {
-		this.jwtUtil = jwtUtil;
-		this.identityRepository = identityRepository;
-		this.authenticationManager = authenticationManager;
-		this.identityService = identityService;
-	}
+	private JwtUtil jwtUtil;
+
+	@Autowired
+	private IdentityRepository identityRepository;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private IdentityService identityService;
 
 	public ResponseEntity<JwtResponse> createJwtToken(JwtRequest jwtRequest) {
 		String userName = null;

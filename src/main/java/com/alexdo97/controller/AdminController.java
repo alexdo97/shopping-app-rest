@@ -2,7 +2,6 @@ package com.alexdo97.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,13 +24,15 @@ import com.alexdo97.model.Product;
 import com.alexdo97.model.Role;
 import com.alexdo97.service.AdminService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(value = "/admin")
 @PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
 public class AdminController {
 
-	@Autowired
-	AdminService adminService;
+	final AdminService adminService;
 
 	// Customer end-points
 

@@ -13,27 +13,30 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alexdo97.model.Identity;
 import com.alexdo97.model.JwtRequest;
 import com.alexdo97.model.JwtResponse;
-import com.alexdo97.service.AuthService;
+import com.alexdo97.service.IdentityService;
+import com.alexdo97.service.JwtService;
 
 @RestController
 @CrossOrigin
 public class AuthController {
 
 	@Autowired
-	private AuthService authService;
+	private JwtService jwtService;
+	@Autowired
+	private IdentityService identityService;
 
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
-		return authService.createJwtToken(jwtRequest);
+		return jwtService.createJwtToken(jwtRequest);
 	}
 
 	@PostMapping("/register")
 	public ResponseEntity<Identity> register(@RequestBody Identity identity) {
-		return authService.createIdentity(identity);
+		return identityService.createIdentity(identity);
 	}
 
 	@GetMapping("/identity")
 	public ResponseEntity<Identity> getIdentity(@AuthenticationPrincipal User user) {
-		return authService.getIdentity(user);
+		return identityService.getIdentity(user);
 	}
 }
