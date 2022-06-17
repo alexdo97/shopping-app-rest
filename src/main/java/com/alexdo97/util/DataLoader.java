@@ -14,7 +14,6 @@ import com.alexdo97.model.Customer;
 import com.alexdo97.model.Identity;
 import com.alexdo97.model.Product;
 import com.alexdo97.model.Role;
-import com.alexdo97.repository.CustomerRepository;
 import com.alexdo97.repository.IdentityRepository;
 import com.alexdo97.repository.ProductRepository;
 import com.alexdo97.repository.RoleRepository;
@@ -22,8 +21,8 @@ import com.alexdo97.repository.RoleRepository;
 @Component
 public class DataLoader implements ApplicationRunner {
 
-	@Autowired
-	private CustomerRepository customerRepository;
+	private static final String ADMIN_ROLE = "ADMIN";
+	private static final String USER_ROLE = "USER";
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -37,24 +36,8 @@ public class DataLoader implements ApplicationRunner {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	private static final String ADMIN_ROLE = "ADMIN";
-	private static final String USER_ROLE = "USER";
-
-//	@Autowired
-//	public DataLoader(CustomerRepository customerRepository, ProductRepository productRepository,
-//			RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-//		this.customerRepository = customerRepository;
-//		this.productRepository = productRepository;
-//		this.roleRepository = roleRepository;
-//		this.passwordEncoder = passwordEncoder;
-//
-//	}
-
 	@Override
 	public void run(ApplicationArguments args) {
-
-//		roleRepository.save(new Role(ADMIN_ROLE, "This is admin role"));
-//		roleRepository.save(new Role(USER_ROLE, "This is user role"));
 
 		Role adminRole = new Role(ADMIN_ROLE, "This is admin role");
 		roleRepository.save(adminRole);
@@ -64,6 +47,8 @@ public class DataLoader implements ApplicationRunner {
 
 		Customer newCustomer;
 		Identity newIdentity;
+
+		// Add customers
 
 		newCustomer = new Customer("alexdo97", "Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152", new Cart());
 		newIdentity = new Identity("alexdo97", getEncodedPassword("admin"), new ArrayList<>(), newCustomer);
@@ -79,16 +64,6 @@ public class DataLoader implements ApplicationRunner {
 		newIdentity = new Identity("alinut", getEncodedPassword("test2"), new ArrayList<>(), newCustomer);
 		newIdentity.getRoleList().add(userRole);
 		identityRepository.save(newIdentity);
-
-		// Add customers
-//		customerRepository.save(new Customer("Alexandru", "Dobrin", "alexdo97@yahoo.com", "0754672152",
-//				new Identity("alexdo97", getEncodedPassword("admin"), adminRoleList), new Cart()));
-//		customerRepository.save(new Customer("David", "Dragomir", "david88@yahoo.com", "0754672322",
-//				new Identity("david123", getEncodedPassword("test"), userRoleList), new Cart()));
-//		customerRepository.save(new Customer("Alin", "Badulea", "badulea66@yahoo.com", "0754652159",
-//				new Identity("alinut", getEncodedPassword("alinnn123"), new ArrayList<>()), new Cart()));
-//		customerRepository.save(new Customer("Mattia", "Baiguini", "mattia.baiguinii@gmail.com", "0756772122",
-//				new Identity("mattia", getEncodedPassword("mattia07"), new ArrayList<>()), new Cart()));
 
 		// Add products
 		productRepository.save(new Product("T-shirt", Category.Fashion, 60));

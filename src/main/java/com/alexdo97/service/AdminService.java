@@ -3,8 +3,7 @@ package com.alexdo97.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.transaction.Transactional;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -25,23 +24,34 @@ import com.alexdo97.repository.CustomerRepository;
 import com.alexdo97.repository.ProductRepository;
 import com.alexdo97.repository.RoleRepository;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@Transactional
-@RequiredArgsConstructor
 public class AdminService {
 
-	private final CustomerRepository customerRepository;
-	private final ProductRepository productRepository;
-	private final CartRepository cartRepository;
-	private final RoleRepository roleRepository;
+	private CustomerRepository customerRepository;
+	private ProductRepository productRepository;
+	private CartRepository cartRepository;
+	private RoleRepository roleRepository;
+
+	public AdminService() {
+
+	}
+
+	@Autowired
+	public AdminService(CustomerRepository customerRepository, ProductRepository productRepository,
+			CartRepository cartRepository, RoleRepository roleRepository) {
+		this.customerRepository = customerRepository;
+		this.productRepository = productRepository;
+		this.cartRepository = cartRepository;
+		this.roleRepository = roleRepository;
+	}
 
 	public ResponseEntity<List<Customer>> getCustomers() {
 		try {
 			List<Customer> customerList = customerRepository.findAll();
+			customerList.stream().forEach(customer -> customer.getIdentity().setPassword("REDACTED"));
 			return ResponseEntity.ok(customerList);
 		} catch (Exception e) {
 			log.error("Unknown error in returning customers", e);
@@ -52,6 +62,7 @@ public class AdminService {
 	public ResponseEntity<Customer> getCustomerByUsername(@PathVariable String username) {
 		try {
 			Customer customer = customerRepository.findById(username).get();
+			customer.getIdentity().setPassword("REDACTED");
 			return ResponseEntity.ok(customer);
 		} catch (NoSuchElementException e) {
 			log.error("Customer not found with username: " + username, e);
@@ -245,7 +256,7 @@ public class AdminService {
 	}
 
 	private boolean roleHasNullAttributes(Role role) {
-		if (role.getRoleName() == null || role.getDescription() == null) {
+		if (role.getRoleName() == null) {
 			return true;
 		}
 		return false;
@@ -266,6 +277,40 @@ public class AdminService {
 			return product;
 		});
 		return updatedProduct;
+	}
+
+	// GETTERS AND SETTERS
+
+	public CustomerRepository getCustomerRepository() {
+		return customerRepository;
+	}
+
+	public void setCustomerRepository(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
+
+	public ProductRepository getProductRepository() {
+		return productRepository;
+	}
+
+	public void setProductRepository(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
+
+	public CartRepository getCartRepository() {
+		return cartRepository;
+	}
+
+	public void setCartRepository(CartRepository cartRepository) {
+		this.cartRepository = cartRepository;
+	}
+
+	public RoleRepository getRoleRepository() {
+		return roleRepository;
+	}
+
+	public void setRoleRepository(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
 	}
 
 }
